@@ -1,0 +1,256 @@
+/* CSS reset (adapted from Blueprint CSS 0.81) */
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, code, del, dfn, em, img, q, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+/* Tables still need 'cellspacing="0"' in the markup. */
+table { border-collapse: collapse; border-spacing: 0; }
+caption, th, td { text-align: left; font-weight: normal; }
+table, td, th { vertical-align: middle; }
+/* Remove quote marks (") from <q>, <blockquote>. */
+blockquote:before, blockquote:after, q:before, q:after { content: ""; }
+blockquote, q { quotes: "" ""; }
+/* Remove border on linked images. */
+a img { border: none; }
+
+ul li, ol li, img { vertical-align: bottom; } /* IE6-7 margin bugfix */
+/* end CSS reset */
+
+h1, h2, h3, h4, h5, h6, p { margin: 6px 0 0 0; }
+body { line-height: 1.5; }
+
+/* Main application stylesheet */
+/* general tag styles */
+body {
+  background-color: #f8e9e1;
+  text-align: center;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  color: #000;
+  margin: 0px;
+}
+
+li, dd, blockquote { margin-left: 0px; list-style: none; }
+
+a, a:visited { color: #5f5f5f; text-decoration: underline; }
+a:hover { text-decoration: underline; }
+
+h1,h2,h3,h4,h5,h6 { font-size: 14px; font-weight: bold; color: #eb6929; line-height: 1; margin-bottom: 0.5em; }
+h1 { font-size: 24px; }
+h2 { font-size: 20px; }
+td { vertical-align: top; text-align: left; }
+th { vertical-align: top; text-align: left; font-weight: bold; }
+
+/* useful general styles */
+.hide { display: none; }
+.bold { font-weight: bold; }
+.left { float: left; }
+.clear { clear: both; }
+.center  { text-align: center; }
+ol.alpha { list-style-type: lower-alpha; }
+
+/* general form style */
+form {
+  width: 300px;
+}
+form li {
+  margin-bottom: 5px;
+}
+
+form li label {
+  width: 100%;
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+form li input[type=text], form li input[type=password] {
+  width: 100%;
+  color: #222;
+  line-height: 140%;
+  font-size: 18px;
+}
+
+form li input[type=text]:focus, form li input[type=password]:focus {
+  background: #f8e9e1;
+}
+
+form li textarea {
+  font-size: 18px;
+  padding: 4px;
+  width: 100%;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+form input[type=submit] {
+  color: #eb6929;
+  background-color: #fff;
+  border: 1px outset #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 5px #000;
+  -moz-box-shadow: 0px 0px 5px #000;
+  -webkit-box-shadow: 0px 0px 5px #000;
+}
+
+
+/* outer container styles */
+#header-wrapper, #wrapper {
+  margin: auto;
+  margin-top: 0px;
+  width: 960px;
+  overflow: hidden;
+}
+
+#wrapper {
+  position: relative;
+  top: -4px;
+  width: 970px;
+  padding: 5px;
+}
+
+/* header */
+#header-outer {
+  background: transparent url(/images/header-bg.png) top left repeat-x;
+  height: 64px;
+  border-bottom: 1px solid #616161;
+  box-shadow: 0px 0px 3px #000;
+  -moz-box-shadow: 0px 0px 3px #000;
+  -webkit-box-shadow: 0px 0px 3px #000;
+}
+
+#header {
+  width: 960px;
+  height: 64px;
+  text-align: left;
+  position: relative;
+  z-index: 500;
+  overflow: hidden;
+}
+
+#header #logo {
+  float: left;
+  background: transparent url(/images/logo.png) top left no-repeat;
+  width: 124px;
+  height: 46px;
+  margin-top: 9px;
+  text-indent: -999em;
+}
+
+/* content_for_layout container */
+#main-content {
+  width: 960px;
+  min-height: 500px;
+  color: #696969;
+  text-align: left;
+  background: #efefef url(/images/main-content-gradient-bg.png) bottom left repeat-x;
+  border: 1px solid #cdcccc;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 5px #000;
+  -moz-box-shadow: 0px 0px 5px #000;
+  -webkit-box-shadow: 0px 0px 5px #000;
+  position: relative;
+  z-index: 5;
+  margin-top: -4px;
+}
+
+#main-content-inner {
+  width: 940px;
+  padding: 10px 10px;
+}
+
+#sidebar {
+  width: 250px;
+  padding: 7px 10px;
+  float: right;
+}
+
+/* navbar */
+#main-navbar {
+  position: absolute;
+  bottom: 8px;
+  right: 0px;
+}
+
+#main-navbar li {
+  float: left;
+  display: inline-block;
+  margin: 0px 4px;
+}
+
+#main-navbar li a {
+  color: #aaa;
+  text-decoration: none;
+  background-color: #222;
+  border: 1px inset #000;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 12px;
+  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+
+#main-navbar li a:hover {
+  color: #fff;
+  background-color: #eb6929;
+  border: 1px outset #e66323;
+  text-decoration: none;
+}
+
+/* other stuff */
+#none_found {
+  font-size: 28px;
+  text-align: center;
+  color: #efefef;
+  width: 60%;
+  margin: 40px auto;
+  padding: 10px 0px;
+  background-color: #eb6929;
+  border: 1px outset #e66323;
+  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+
+#none_found a {
+  color: #efefef;
+}
+
+/* maps */
+#event_points {
+  display: none; 
+}
+
+#event_location_map {
+  float: right;
+  width: 480px;
+  margin-right: 60px;
+}
+
+#event_location_map h2 {
+  color: #696969;
+}
+
+#event_location_map #map {
+  width: 480px;
+  height: 480px;
+  border: 1px inset #e66323;
+}
+
+
+/* flash */
+#flash-notice, #flash-error, #flash-success { padding: 3px 10px; font-weight: bold; text-align: center; }
+#flash-notice { color: black; background-color: #fff1a8; }
+#flash-error { color: white; background-color: #cc0000; }
+#flash-success { color: black; background-color: #e6efc2; }

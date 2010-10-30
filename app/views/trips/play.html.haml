@@ -1,0 +1,18 @@
+%div{:style => 'display: none'}
+  - @story.scenes.each_with_index do |scene, i|
+    %div.scene{:id => "scene-#{i}"}
+      %h1= scene.name
+      %div= scene.description
+      %div{:style => 'display: none'}
+        .id= scene.id
+        .transport_mode_id= scene.transport_mode_id
+        .longitude= scene.longitude
+        .latitude= scene.latitude
+      %p
+        - if scene.previous_scene_id
+          = link_to 'previous', "##{i-1}", :class => 'previous', :id => "previous-#{scene.id}"
+        \|
+        - if scene.next_scene_id
+          = link_to 'next', "##{i+1}", :class => 'next', :id => "next-#{scene.id}"
+
+#map{:style => "width: 1400px; height: 400px;"}

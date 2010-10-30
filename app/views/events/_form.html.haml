@@ -1,0 +1,22 @@
+#event_location_map
+  %h2 Choose location
+  %p Click on map to set this event's location
+  = render :partial => 'trips/map', :locals => {:trip => @event.trip, :current_event => @event, :mode => :edit_event_location}
+
+= semantic_form_for(@event) do |f|
+  = error_messages_for :event
+  
+  %fieldset
+    %ul
+      = f.input :trip_id, :as => :hidden
+      = f.input :name, :required => true
+      = f.input :description, :as => :text, :required => false
+      = f.input :location, :as => :string, :hint => "A name for the location of this event. E.g. Parent's House"
+      - if !f.object.previous_event.nil?
+        = f.input :transport_mode, :as => :select, :label => "How did you get here?"
+      = f.input :latitude, :as => :hidden
+      = f.input :longitude, :as => :hidden
+      = f.input :started_at, :as => :string
+      = f.input :ended_at, :as => :string
+      = f.input :rating, :as => :string
+      = f.commit_button f.object.new_record? ? 'Add Event' : 'Update Event', :button_html => { :id => nil }

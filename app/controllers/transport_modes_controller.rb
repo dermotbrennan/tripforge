@@ -1,0 +1,2 @@
+class TransportModesController < ApplicationController
+end

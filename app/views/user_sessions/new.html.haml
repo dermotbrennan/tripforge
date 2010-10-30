@@ -1,0 +1,11 @@
+%h1= @page_name = 'Login'
+
+= semantic_form_for @user_session, :url => login_path do |f|
+  = f.error_messages :header_message => 'Please correct the errors below:', :message => nil
+  %ul
+    = (f.input :login).gsub(/ error/, '') # ugly hack to fix AuthLogic errors
+    = (f.input :password).gsub(/ error/, '')
+    = (f.input :remember_me, :as => :boolean, :label_html => {:style => 'font-weight: normal'}).gsub(/ error/, '')
+    = f.commit_button 'Login'
+
+    %li= link_to 'Forgot Your Password?', forgot_password_path 

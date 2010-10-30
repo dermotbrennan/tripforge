@@ -1,0 +1,13 @@
+%h1= @page_name = 'Edit my account details' 
+
+= semantic_form_for @user, :url => account_path do |f|
+  = f.error_messages :header_message => 'Please correct the errors below:', :message => nil
+  %ul
+    = f.input :email
+
+  %h2 Change password
+  %ul
+    = f.input :password, :label => 'Change password'
+    = f.input :password_confirmation
+
+    %li= f.commit_button 'Update account details'   

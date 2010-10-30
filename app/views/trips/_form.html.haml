@@ -1,0 +1,7 @@
+= semantic_form_for(@trip) do |f|
+  = error_messages_for :trip
+  %fieldset
+    %ul
+      = f.input :name, :required => true
+      = f.input :description, :as => :text
+      = f.commit_button f.object.new_record? ? 'Create Trip' : 'Update Trip', :button_html => { :id => nil }

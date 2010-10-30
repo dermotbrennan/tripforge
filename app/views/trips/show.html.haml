@@ -1,0 +1,16 @@
+%h1== #{link_to 'My Trips', trips_path}  &rsaquo; #{@trip.name}
+
+= nl2br(@trip.description)
+
+%p= link_to 'PLAY', :action => 'play'
+
+%hr
+
+- unless @trip.events.empty?
+  %p= link_to 'Add event', new_event_path(:trip_id => @trip.id)
+  %ul#events= render :partial => 'events/event', :collection => @trip.events
+- else
+  %p
+    No events yet.
+    = link_to 'Create one', new_trip_event_path(:trip_id => @trip.id)
+    \.
