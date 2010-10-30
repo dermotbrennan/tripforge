@@ -1,10 +1,12 @@
+- current_event ||= nil
 #event_points
-  - events = current_event.new_record? ? trip.events : (trip.events + current_event).uniq
+  - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events + [current_event]).uniq : trip.events
   - events.each do |event|
-    - class_name = event == current_event ? 'current' : ''
-    .point{:class => class_name}
-      .lng= event.longitude
-      .lat= event.latitude
-      .id= event.id.to_s
+    - if event.latitude.present? && event.longitude.present?
+      - class_name = event == current_event ? 'current' : ''
+      .point{:class => class_name}
+        .lng= event.longitude
+        .lat= event.latitude
+        .id= event.id.to_s
 #map
   

@@ -7,8 +7,8 @@
 %hr
 
 - unless @trip.events.empty?
-  %p= link_to 'Add event', new_event_path(:trip_id => @trip.id)
   %ul#events= render :partial => 'events/event', :collection => @trip.events
+  %p= link_to 'Add event', new_trip_event_path(:trip_id => @trip.id)
 - else
   %p
     No events yet.

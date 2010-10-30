@@ -40,6 +40,14 @@ function animateToNextEvent(e) {
   return false;
 }
 
+function getTripBounds(event_points) {
+  bounds = new google.maps.LatLngBounds();
+  $.each(event_points, function(i, point) {
+    bounds.extend(point.position);
+  })
+  return bounds;
+}
+
 function getEventPoints() {
   points = [];
   jQuery.each($('#event_points .point'), function(i, point) {
@@ -99,6 +107,7 @@ function addRoute(map, path, event_points) {
   $.each(event_points, function(i, point) {
     marker_positions.push(point.position);
   });
+  if (typeof(path) != 'undefined') path.setMap(null);
   path = new google.maps.Polyline({
     path: marker_positions,
     strokeColor: "#FF0000",
@@ -107,6 +116,7 @@ function addRoute(map, path, event_points) {
   });
 
   path.setMap(map);
+  return path;
 }
 
 function moveTravelMarker(latlng, panMap) {
@@ -126,31 +136,41 @@ function moveTravelMarker(latlng, panMap) {
   }
 }
 
-function moveEventMarker(map, markers, point, new_position) {
-  point.latitude = new_position.latitude;
-  point.longitude = new_position.longitude;
+function moveEventMarker(markers, event_point, new_position) {
+  $.each(markers, function(i, marker) {
+    if (marker.position == event_point.position) {
+      marker.setPosition(new_position);
+      event_point.position = new_position;
+    }
+  });
+
+  return markers;
 }
 
 function updateLatLngFields(new_position) {
-  $('#event_latitude').val(new_position.latitude);
-  $('#event_longitude').val(new_position.longitude);
+  $('#event_latitude').val(new_position.lat());
+  $('#event_longitude').val(new_position.lng());
 }
 
 $(document).ready(function() {
   if ($('#map').length > 0) {
+    event_points = getEventPoints();
+    current_event_point = getCurrentEventPoint(event_points);
+    trip_bounds = getTripBounds(event_points);
+    trip_center = trip_bounds.getCenter();
+
     var myLatlng = new google.maps.LatLng(53.344104,-6.267494);
     var myOptions = {
       zoom: 6,
-      center: myLatlng,
+      center: trip_center,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     var map = new google.maps.Map($("#map")[0], myOptions);
+    map.fitBounds(trip_bounds);
     var path;
 
-    event_points = getEventPoints();
-    current_event_point = getCurrentEventPoint(event_points);
     markers = addEventMarkers(map, event_points);
-    addRoute(map, path, event_points);
+    path = addRoute(map, path, event_points);
 
     google.maps.event.addListener(map, 'click', function(e) {
       position = e.latLng;
@@ -160,10 +180,10 @@ $(document).ready(function() {
         markers = markers_and_event_points[1];
         event_points = markers_and_event_points[2];
       } else {
-        moveEventMarker(map, markers, current_event_point, position);
+        markers = moveEventMarker(markers, current_event_point, position);
       }
 
-      addRoute(map, path, event_points);
+      path = addRoute(map, path, event_points);
 
       updateLatLngFields(position);
     });

@@ -1,18 +1,18 @@
 %div{:style => 'display: none'}
-  - @story.scenes.each_with_index do |scene, i|
-    %div.scene{:id => "scene-#{i}"}
-      %h1= scene.name
-      %div= scene.description
+  - @trip.events.each_with_index do |event, i|
+    %div.event{:id => "event-#{i}"}
+      %h1= event.name
+      %div= event.description
       %div{:style => 'display: none'}
-        .id= scene.id
-        .transport_mode_id= scene.transport_mode_id
-        .longitude= scene.longitude
-        .latitude= scene.latitude
+        .id= event.id
+        .transport_mode_id= event.transport_mode_id
+        .longitude= event.longitude
+        .latitude= event.latitude
       %p
-        - if scene.previous_scene_id
-          = link_to 'previous', "##{i-1}", :class => 'previous', :id => "previous-#{scene.id}"
+        - if event.previous_event_id
+          = link_to 'previous', "##{i-1}", :class => 'previous', :id => "previous-#{event.id}"
         \|
-        - if scene.next_scene_id
-          = link_to 'next', "##{i+1}", :class => 'next', :id => "next-#{scene.id}"
+        - if event.next_event_id
+          = link_to 'next', "##{i+1}", :class => 'next', :id => "next-#{event.id}"
 
-#map{:style => "width: 1400px; height: 400px;"}
+= render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}

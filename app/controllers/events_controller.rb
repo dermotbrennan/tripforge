@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
   def new
     trip = Trip.find(params[:trip_id])
-    @event = Event.new(:trip => trip, :started_at => Time.now)
+    time = trip.events.last.try(:ended_at) || Time.now
+    @event = Event.new(:trip => trip, :started_at => time, :ended_at => time)
   end
 
   def edit
@@ -25,7 +26,7 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event])
     if @event.save
-      redirect_to trip_scene_path(@event, :trip => @event.trip.id), :success => "Event created successfully"
+      redirect_to trip_path(@event.trip), :success => "Event created successfully"
     else
       render :action => :new
     end

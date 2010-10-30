@@ -7,7 +7,7 @@ class Event < ActiveRecord::Base
   belongs_to :previous_event, :class_name => "Event"
 
   validates_associated :trip
-  validates :name, :description, :presence => true
+  validates :name, :presence => true
 
   def has_gphoto?(gphoto_xml)
     gphoto_id = gphoto_xml.elements['gphoto:id'].text
