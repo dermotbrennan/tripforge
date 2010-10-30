@@ -154,6 +154,11 @@ function updateLatLngFields(new_position) {
 
 $(document).ready(function() {
   if ($('#map').length > 0) {
+    if ($("body#body-trips-play").length > 0) {
+      $('body').prepend($("#map, #map_navigation"));
+      $("#map").height($(document).height() - 64);
+    }
+
     event_points = getEventPoints();
     current_event_point = getCurrentEventPoint(event_points);
     trip_bounds = getTripBounds(event_points);

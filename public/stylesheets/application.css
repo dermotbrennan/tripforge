@@ -248,6 +248,69 @@ form input[type=submit] {
   border: 1px inset #e66323;
 }
 
+body#body-trips-play #main-content {
+  height: 60px;
+  min-height: 60px;
+}
+
+body#body-trips-play #map {
+  width: 100%;
+  position: absolute;
+  top: 64px;
+  z-index: -1 !important;
+}
+
+body#body-trips-play #map_navigation_wrapper {
+
+}
+
+body#body-trips-play #map_navigation {
+  border: 1px solid #000;
+  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 1px #777571; -moz-box-shadow: 0px 0px 1px #777571; -webkit-box-shadow: 0px 0px 1px #777571;
+  height: 30px;
+  width: 620px;
+  padding: 10px 20px;
+  background-color: #777571;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  margin-left: -320px;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgb(115,115, 115)), color-stop(1, rgb(106,106,106)));
+  background: -moz-linear-gradient(center bottom, rgb(115,115,114) 0%, rgb(106,106,106) 100%);
+}
+
+body#body-trips-play #map_navigation h2 {
+  color: #e3e3e3;
+  margin: 0px;
+}
+
+#map_navigation #prev_event {
+  float: left;
+}
+
+#map_navigation #prev_event, #map_navigation #next_event {
+  width: 200px;
+  height: 40px;
+  float: left;
+  padding: 10px 0px;
+}
+
+#map_navigation #current_event {
+   width: 200px;
+   float: left;
+}
+
+#map_navigation #next_event {
+  text-align: right;
+}
+
+#map_navigation #next_event a.next_arrow {
+  background: url(/images/next-arrow.png) top left no-repeat;
+  width: 25px;
+  height: 25px;
+}
+
 
 /* flash */
 #flash-notice, #flash-error, #flash-success { padding: 3px 10px; font-weight: bold; text-align: center; }

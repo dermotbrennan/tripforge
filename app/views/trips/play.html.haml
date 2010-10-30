@@ -1,3 +1,5 @@
+%h1= @trip.name
+
 %div{:style => 'display: none'}
   - @trip.events.each_with_index do |event, i|
     %div.event{:id => "event-#{i}"}
@@ -16,3 +18,14 @@
           = link_to 'next', "##{i+1}", :class => 'next', :id => "next-#{event.id}"
 
 = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}
+
+- event = @trip.events.first
+#map_navigation
+  #prev_event
+
+  #current_event
+    %h2= event.name
+    %p.time= event.started_at
+  #next_event
+    = link_to @trip.events.second.name, '#'
+    = link_to '', '#', :class => 'next_arrow arrow'
