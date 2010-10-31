@@ -55,6 +55,16 @@ th { vertical-align: top; text-align: left; font-weight: bold; }
 .center  { text-align: center; }
 ol.alpha { list-style-type: lower-alpha; }
 
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -moz-binding: url('ellipsis.xml#ellipsis');
+    display: block;
+}
+
 /* general form style */
 form {
   width: 300px;
@@ -228,7 +238,7 @@ form input[type=submit] {
 }
 
 /* maps */
-#event_points {
+#event_points, #map_mode {
   display: none; 
 }
 
@@ -260,17 +270,14 @@ body#body-trips-play #map {
   z-index: -1 !important;
 }
 
-body#body-trips-play #map_navigation_wrapper {
-
-}
-
-body#body-trips-play #map_navigation {
+body#body-trips-play .map_navigation {
+  display: none;
   border: 1px solid #000;
   border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
-  box-shadow: 0px 0px 1px #777571; -moz-box-shadow: 0px 0px 1px #777571; -webkit-box-shadow: 0px 0px 1px #777571;
+  box-shadow: 0px 0px 2px #777571; -moz-box-shadow: 0px 0px 2px #777571; -webkit-box-shadow: 0px 0px 2px #777571;
   height: 30px;
-  width: 620px;
-  padding: 10px 20px;
+  width: 640px;
+  padding: 10px;
   background-color: #777571;
   position: absolute;
   bottom: 20px;
@@ -280,37 +287,75 @@ body#body-trips-play #map_navigation {
   background: -moz-linear-gradient(center bottom, rgb(115,115,114) 0%, rgb(106,106,106) 100%);
 }
 
-body#body-trips-play #map_navigation h2 {
+body#body-trips-play .map_navigation.active {
+  display: block;
+}
+
+.map_navigation .event_nav_button {
+  float: left;
+  width: 160px;
+  height: 25px;
+  float: left;
+  padding: 0px;
+  margin-top: 2px;
+}
+
+
+.map_navigation .event_nav_button a {
+  float: left;
   color: #e3e3e3;
-  margin: 0px;
+  line-height: 25px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
 }
 
-#map_navigation #prev_event {
-  float: left;
+.map_navigation .event_nav_button a.arrow {
+  display: inline-block;
 }
 
-#map_navigation #prev_event, #map_navigation #next_event {
-  width: 200px;
-  height: 40px;
-  float: left;
-  padding: 10px 0px;
+.map_navigation .event_nav_button .name {
+  width: 131px;
 }
 
-#map_navigation #current_event {
-   width: 200px;
+.map_navigation .current_event {
+   width: 320px;
    float: left;
 }
 
-#map_navigation #next_event {
+.map_navigation .current_event h2, .map_navigation .current_event h2 a {
+  color: #e3e3e3;
+  margin: 0px;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.map_navigation .current_event .time {
+  color: #e3e3e3;
+  margin: 0px;
+  font-size: 11px;
+}
+
+.map_navigation .current_event_id, .map_navigation .event_id  { display: none; }
+
+.map_navigation .next_event {
   text-align: right;
 }
 
-#map_navigation #next_event a.next_arrow {
-  background: url(/images/next-arrow.png) top left no-repeat;
+.map_navigation a.arrow {
   width: 25px;
   height: 25px;
 }
 
+.map_navigation .next_event a.next_arrow {
+  margin-left: 4px;
+  background: url(/images/next-arrow.png) top left no-repeat;
+}
+
+.map_navigation .prev_event a.prev_arrow {
+  margin-right: 4px;
+  background: url(/images/prev-arrow.png) top left no-repeat;
+}
 
 /* flash */
 #flash-notice, #flash-error, #flash-success { padding: 3px 10px; font-weight: bold; text-align: center; }
