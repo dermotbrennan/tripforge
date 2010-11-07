@@ -25,7 +25,7 @@ $(document).ready(function() {
       //center: trip_center,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     }
-    var map = new google.maps.Map($("#map")[0], myOptions);
+    map = new google.maps.Map($("#map")[0], myOptions);
 
     trip = new Trip(map);
     trip.addMarkers();
@@ -47,9 +47,17 @@ $(document).ready(function() {
         event_id = $(this).parents('.event_nav_button').find('.event_id').text();
         marker = trip.findMarkerByEventId(event_id);
         if (marker != null) {
-          trip.panToMarker(marker);
-          trip.setCurrent(marker);
-          activateNavForEvent(event_id);
+          trip.animateBetweenMarkers(trip.getCurrent(), marker);
+          var intervalIdent = setInterval((function() {
+            if (typeof(trip.travelMarker) != 'undefined' && !trip.travelMarker.is_moving) {
+              clearInterval(intervalIdent);
+              trip.setCurrent(marker);
+              activateNavForEvent(event_id);
+              return;
+            }
+          }), 50);
+          
+          
         }
       });
     }

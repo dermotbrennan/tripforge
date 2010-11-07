@@ -5,6 +5,9 @@
     - if event.latitude.present? && event.longitude.present?
       - class_name = (event == current_event) || (current_event.nil? && i == 0) ? 'current' : ''
       .point{:class => class_name}
+        - if event.transport_mode
+          .transport_mode_id= event.transport_mode_id
+          .transport_mode_name= event.transport_mode.name.downcase
         .lng= event.longitude
         .lat= event.latitude
         .id= event.id.to_s
