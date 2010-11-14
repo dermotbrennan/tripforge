@@ -13,8 +13,9 @@ function Trip(map) {
     return bounds;
   };
 
-  this.fitBounds = function() {
-    this.map.fitBounds(this.getBounds());
+  this.fitBounds = function(bounds) {
+    if (typeof(bounds) == 'undefined') bounds = this.getBounds();
+    this.map.fitBounds(bounds);
   }
 
   this.buildMarker = function(point) {
@@ -22,19 +23,28 @@ function Trip(map) {
     lng = $(point).find('.lng').text();
     position = new google.maps.LatLng(lat, lng);
     event_id = $(point).find('.id').text();
+    transport_mode_id = $(point).find('.transport_mode_id').text();
+    transport_mode_name = $(point).find('.transport_mode_name').text();
     is_current = $(point).hasClass('current') ? true : false;
     icon_url = is_current ? this.current_marker_icon : this.red_marker_icon;
     
     marker = new google.maps.Marker({map: this.map, position: position,
       icon: new google.maps.MarkerImage(icon_url),
-      event_id: event_id,
-      is_current: is_current});
+      event_id: event_id, transport_mode_id: transport_mode_id,
+      transport_mode_name: transport_mode_name, is_current: is_current,
+      trip: this
+    });
     /*marker.infoWindowContent = $('#event-' + i).html();
       google.maps.event.addListener(marker, 'click', function(e) {
         infowindow.content = this.infoWindowContent;
-        infowindow.open(map, this);
+        infowindow.open(map, this); 1
       });*/
-    
+
+     google.maps.event.addListener(marker, 'click', function() {
+       activateNavForEvent(this.event_id);
+       this.trip.setCurrent(this);
+     });
+
     return marker;
   }
 
@@ -53,37 +63,83 @@ function Trip(map) {
     this.markers.push(marker);
   }
 
-  this.addRoute = function() {
-    marker_positions = [];
-    $.each(this.markers, function(i, point) {
-      marker_positions.push(point.position);
-    });
-    if (typeof(this.path) != 'undefined') this.path.setMap(null);
-    this.path = new google.maps.Polyline({
-      path: marker_positions,
-      strokeColor: "#FF0000",
-      strokeOpacity: 1.0,
+  this.addRouteCallback = function(path_points, destination_marker, origin_position, destination_position, path_color) {
+    // add the start and end positions if theyre not already there
+    if (path_points[0] != origin_position) path_points.unshift(origin_position);
+    if (path_points[path_points.length-1] != destination_position) path_points.push(destination_position);
+
+    // draw path
+    path = new google.maps.Polyline({
+      path: path_points,
+      strokeColor: path_color,
+      strokeOpacity: 0.8,
       strokeWeight: 2
     });
-    this.path.setMap(this.map);
+    path.setMap(this.map);
+    destination_marker.path_points = path_points;
+    desired_journey_time = 5000;
+    destination_marker.frame_rate = desired_journey_time / path_points.length;
+    debug.log(path);
+
+    this.paths.push(path);
   }
 
-  this.moveTravelMarker = function(latlng, panMap) {
-    var travelMarker;
-
-    if (typeof(travelMarker) == 'undefined') {
-      plane_image = new google.maps.MarkerImage("/images/plane_icon.png",
-      new google.maps.Size(50, 37),
-      new google.maps.Point(0, 0),
-      new google.maps.Point(25, 19));
-      travelMarker = new google.maps.Marker({map: map, position: latlng, icon: plane_image});
-    } else {
-      travelMarker.setPosition(latlng);
+  this.addRoute = function() {
+    // clear paths
+    if (typeof(this.paths) != 'undefined' && this.paths.length > 0) {
+      $.each(this.paths, function(i) {
+        this.paths[i].setMap(null);
+      });
     }
+    this.paths = [];
 
-    if (typeof(panMap) != 'undefined' && panMap == true) {
-      map.panTo(latlng);
-    }
+    trip = this;
+    $.each(this.markers, function(i, origin_marker) {
+      var destination_marker = trip.markers[i+1];
+      if (typeof(destination_marker) == 'undefined') return null;
+
+      var path_color = trip.pathColors[destination_marker.transport_mode_name];
+      var origin_position = origin_marker.getPosition();
+      var destination_position = destination_marker.getPosition();
+      var path_points = new Array();
+
+      if (destination_marker.transport_mode_name.match(/walking|driving/)) {  
+        direction_service = new google.maps.DirectionsService();
+        direction_request = {
+          origin: origin_position, destination: destination_position,
+          travelMode: destination_marker.transport_mode_name.toUpperCase(),
+          provideRouteAlternatives: false
+        };
+        
+        direction_service.route(direction_request, function(directions_result, directions_status) {
+          if (directions_status == 'OK') {
+            debug.log(directions_result);
+            debug.log(directions_result.routes);
+            path_points = directions_result.routes[0].overview_path
+
+            trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, path_color);
+            // add on the start and end points if the directions werent able to include those.
+          } else {
+            debug.log("direction status" + directions_status);
+          }
+        })
+      } else {      
+        // path is a straight line but lets create loads of points along the way. will be needed for animation
+        num_points = 200;
+        for(i = 1; i < num_points; i++) {
+          path_points[i] = new google.maps.LatLng(
+            origin_position.lat() + (((destination_position.lat() - origin_position.lat())*parseFloat(i))/parseFloat(num_points)),
+            origin_position.lng() + (((destination_position.lng() - origin_position.lng())*parseFloat(i))/parseFloat(num_points))
+          );
+        }
+        trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, path_color);
+
+      }
+
+      
+      return true;
+    });
+    debug.log(this.paths);
   }
 
   this.moveMarker = function(target_marker, new_position) {
@@ -158,9 +214,9 @@ function Trip(map) {
     google.maps.event.addListener(this.map, 'click', function(e) {
       position = e.latLng;
       if (this.getCurrent == null) {
-        addEventMarker(position, is_current = true);
+        this.addMarker(position, is_current = true);
       } else {
-        moveEventMarker(this.getCurrent(), position);
+        this.moveMarker(this.getCurrent(), position);
       }
 
       this.addRoute();
@@ -173,42 +229,95 @@ function Trip(map) {
     $('#event_longitude').val(new_position.lng());
   }
 
-  function animateToNextEvent(e) {
-    try {
-      this_marker = markers[parseInt($(this).attr('href').replace(/#/, ''))-1];
-
-      next_marker = markers[parseInt($(this).attr('href').replace(/#/, ''))];
-
-      start_point = this_marker.getPosition();
-      console.log(start_point);
-      end_point = next_marker.getPosition();
-      console.log(end_point);
-      num_stops = 100;
-      stops = [start_point];
-      for(var i = 1; i < num_stops; i++) {
-        console.log(i);
-        stops[i] = new google.maps.LatLng(
-            start_point.lat() + (((end_point.lat() - start_point.lat())*parseFloat(i))/parseFloat(num_stops)),
-            start_point.lng() + (((end_point.lng() - start_point.lng())*parseFloat(i))/parseFloat(num_stops))
-          );
-      }
-      stops[num_stops] = end_point;
-      console.log(stops);
-
-      frame_rate = 15;
-      $.each(stops, function(i, stop) {
-        setTimeout(moveTravelMarker, frame_rate*i, stop, true);
-      });
-
-      function openWindow(marker) {
-        infowindow.content = marker.infoWindowContent;
-        infowindow.open(map, marker);
-      }
-      setTimeout(openWindow, frame_rate*num_stops, next_marker);
-
-    } catch(e) {
-      console.log(e);
+  this.icons = {
+    airplane: function() {
+      return new google.maps.MarkerImage("/images/airplane_icon.png",
+          new google.maps.Size(50, 37),
+          new google.maps.Point(0, 0),
+          new google.maps.Point(25, 19));
+    },
+    walking: function() {
+    return new google.maps.MarkerImage("/images/walking_icon.png",
+        new google.maps.Size(49, 52),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(25, 26));
+    },
+    driving: function() {
+      return new google.maps.MarkerImage("/images/driving_icon.png",
+        new google.maps.Size(24, 50),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12, 25));
     }
+  }
+
+  this.pathColors = { airplane: "#FC0000", driving: "#8e00e0", walking: "#439f00" }
+
+  this.animateBetweenMarkers = function(start_marker, end_marker) {
+    start_point = start_marker.getPosition();
+    end_point = end_marker.getPosition();
+    
+    icon = this.icons[end_marker.transport_mode_name]();
+    this.travelMarker = new google.maps.Marker({map: this.map, position: start_point, icon: icon});
+    this.travelMarker.stops = end_marker.path_points;
+    this.travelMarker.frame_rate = end_marker.frame_rate;
+    this.travelMarker.is_moving = true;
+    this.travelMarker.current_stop_index = 0;
+
+    setTimeout(function(thisObj) {thisObj.moveTravelMarkerThroughStops()}, this.travelMarker.frame_rate, this);
+    //this.travelMarker.refitBoundsInterval = setInterval(function(thisObj) { thisObj.fitBoundsToTravelMarker() }, 50, this);
+
     return false;
+  }
+
+
+  this.moveTravelMarkerThroughStops = function(current_stop_index) {
+    //debug.log(current_stop_index);
+    current_stop_index = this.travelMarker.current_stop_index;
+    stop = this.travelMarker.stops[current_stop_index];
+    //debug.log(typeof(stop));
+
+    if (typeof(stop) == 'undefined') {
+      this.travelMarker.setMap(null);
+      this.travelMarker.is_moving = false;
+      debug.log('finished');
+      return false;
+    }
+
+    this.fitBoundsToTravelMarker();
+
+    this.travelMarker.setPosition(stop);
+    this.travelMarker.current_stop_index++;
+
+    setTimeout(function(thisObj) {thisObj.moveTravelMarkerThroughStops()}, this.travelMarker.frame_rate, this);
+    
+    return true;
+  }
+
+  this.fitBoundsToTravelMarker = function() {
+    // create new bounds for map
+    // adjust the viewport of map so that we can see
+    // the current stop, the previous and next 1% of stops
+    current_stop_index = this.travelMarker.current_stop_index;
+    stops = this.travelMarker.stops;
+    prev_stop_percentage = Math.round(stops.length * 0.05);
+    stop_percentage = Math.round(stops.length * 0.40);
+    if (current_stop_index%5 == 0) {
+      previous_stops_index = Math.max(current_stop_index - prev_stop_percentage, 0);
+      previous_stops = this.travelMarker.stops.slice(previous_stops_index, current_stop_index);
+
+      next_stops_index = Math.min(current_stop_index + stop_percentage, stops.length -1);
+      next_stops = this.travelMarker.stops.slice(current_stop_index, next_stops_index);
+
+      bound_stops = [stop].concat(previous_stops).concat(next_stops);
+      bound_stops = [stop].concat(next_stops);
+
+      bounds = new google.maps.LatLngBounds();
+      $.each(bound_stops, function(i, pos) {
+        if (typeof(pos) != 'undefined' && typeof(pos.lat) == 'function') {
+          bounds.extend(pos);
+        }
+      });
+      this.fitBounds(bounds);
+    }
   }
 }

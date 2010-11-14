@@ -181,6 +181,7 @@ form input[type=submit] {
 #main-content-inner {
   width: 940px;
   padding: 10px 10px;
+  overflow: hidden;
 }
 
 #sidebar {
@@ -237,22 +238,149 @@ form input[type=submit] {
   color: #efefef;
 }
 
+/* trip show */
+#trip_details_actions {
+  width: 100%;
+  position: relative;
+  border-bottom: 1px solid #eb6929;
+  padding: 10px 0px;
+  margin-bottom: 20px;
+}
+
+#trip_actions {
+  right: 20px;
+  top: 0px;
+  height: 30px;
+  position: absolute;
+}
+
+.trip_button {
+  float: right;
+  margin-left: 10px;
+  display: block;
+  text-indent: -999em;
+}
+
+#play_trip_button {
+  background: transparent url(/images/play_button-off.png) top left no-repeat;
+  width: 98px;
+  height: 30px;
+}
+
+#play_trip_button:hover, #play_trip_button:active {
+  background-image: url(/images/play_button-on.png);
+}
+
+#share_trip_button {
+  background: transparent url(/images/share_button-off.png) top left no-repeat;
+  width: 120px;
+  height: 30px;
+}
+
+#share_trip_button:hover, #share_trip_button:active {
+  background-image: url(/images/share_button-on.png);
+}
+
+/* event list */
+ul#events>li {
+  margin: 10px 0px;
+  padding: 0px 10px 0px 20px;
+  width: 330px;
+  background: #eaebeb url(/images/handle-bg.png) top left repeat-y;
+  position: relative;
+  border: 2px solid #666565;
+  border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+
+ul#events>li .handle {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 15px;
+  height: 100%;
+  cursor: move;
+}
+
+ul#events>li .event_id {
+  display: none;
+}
+
+ul#events>li .ajax_loading {
+  background: transparent url(/images/ajax-loader.gif) center center no-repeat;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+
+ul#events>li.reloading .ajax_loading {
+  display: block;
+}
+
+ul#events>li.reloading {
+  opacity: 0.4;
+}
+
+ul#events>li:hover, ul#events>li:active {
+  border-color: #eb6929;
+}
+
+ul#events .form_buttons {
+  position: absolute;
+  bottom: 0px;
+  right: 8px;
+}
+
+ul#events form {
+  width: 100%;
+}
+
+ul#events form li {
+  float: left;
+  width: 300px;
+}
+
+ul#events form li input[type=text] {
+  width: 100%;
+}
+
+ul#events li.datetime_picker {
+  float: left;
+  width: 145px;
+}
+
+ul#events input.datetime_picker {
+  width: 100%;
+  font-size: 13px;
+}
+
+ul#events li.datetime_picker.dates_separator {
+  width: auto;
+  font-size: 11px;
+  margin: 0px 5px;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* anytime datepicker overrides */
+.AnyTime-win {
+  z-index: 3000;
+}
+
 /* maps */
 #event_points, #map_mode {
   display: none; 
 }
 
-#event_location_map {
+body#body-trips-show #map_wrapper {
   float: right;
   width: 480px;
-  margin-right: 60px;
+  margin-right: 10px;
 }
 
-#event_location_map h2 {
-  color: #696969;
-}
-
-#event_location_map #map {
+body#body-trips-show #map {
   width: 480px;
   height: 480px;
   border: 1px inset #e66323;
@@ -268,6 +396,22 @@ body#body-trips-play #map {
   position: absolute;
   top: 64px;
   z-index: -1 !important;
+}
+
+body#body-trips-play #event_info_window {
+  width: 350px;
+  max-height: 700px;
+  background-color: #efefef;
+  border: 1px solid #cdcccc;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-shadow: 0px 0px 5px #000;
+  -moz-box-shadow: 0px 0px 5px #000;
+  -webkit-box-shadow: 0px 0px 5px #000;
+  position: absolute;
+  right: 30px;
+  top: 200px;
 }
 
 body#body-trips-play .map_navigation {

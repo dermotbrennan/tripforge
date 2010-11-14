@@ -1,14 +1,16 @@
-%li
-  %h2= event.name
-  .description= nl2br(event.description)
-  %p
-    == #{event.started_at} - #{event.ended_at} in #{event.location}
-  .items
-    - if !event.items.empty?
-      %ul= render :partial => 'items/mini_item', :collection => event.items
+%li{:id => "event-#{event.id}"}
+  .handle
+  .event_id= event.id
+  .ajax_loading
+  .event_summary= render :partial => 'events/summary', :locals => {:event => event}
+  .event_form= render :partial => 'events/mini_form', :locals => {:event => event}
 
-  %p
+  .form_buttons
+    == #{link_to 'done', '#', :class => 'save_event_button'} -
+    == #{link_to 'cancel', '#', :class => 'cancel_edit_event_button'}
+
+  .event_actions
     == #{link_to 'import', import_trip_event_items_path(event.trip, event)} -
-    == #{link_to 'add item', new_trip_event_item_path(event.trip, event)} -
-    == #{link_to 'edit', edit_trip_event_path(event.trip, event)} -
+    == #{link_to 'edit', edit_trip_event_path(event.trip, event), :class => 'edit_event_button'} -
     == #{link_to 'delete', event_path(event), :method => :delete, :confirm => "Are you sure?"}
+

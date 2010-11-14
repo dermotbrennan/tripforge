@@ -1,12 +1,14 @@
 %h1== #{link_to 'My Trips', trips_path}  &rsaquo; #{@trip.name}
 
-= nl2br(@trip.description)
+#trip_details_actions
+  = nl2br(@trip.description)
 
-%p= link_to 'PLAY', :action => 'play'
-
-%hr
+  #trip_actions
+    = link_to 'PLAY', {:action => 'play'}, :id => 'play_trip_button', :class => 'trip_button'
+    = link_to 'SHARE', {:action => 'share'}, :id => 'share_trip_button', :class => 'trip_button'
 
 - unless @trip.events.empty?
+  = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :trip_overview}
   %ul#events= render :partial => 'events/event', :collection => @trip.events
   %p= link_to 'Add event', new_trip_event_path(:trip_id => @trip.id)
 - else

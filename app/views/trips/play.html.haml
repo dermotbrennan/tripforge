@@ -1,23 +1,8 @@
-%h1= @trip.name
-
-#event_data{:style => 'display: none'}
-  - @trip.events.each_with_index do |event, i|
-    %div.event{:id => "event-#{i}"}
-      %h1= event.name
-      %div= event.description
-      %div{:style => 'display: none'}
-        .id= event.id
-        .transport_mode_id= event.transport_mode_id
-        .longitude= event.longitude
-        .latitude= event.latitude
-      %p
-        - if event.previous_event_id
-          = link_to 'previous', "##{i-1}", :class => 'previous', :id => "previous-#{event.id}"
-        \|
-        - if event.next_event_id
-          = link_to 'next', "##{i+1}", :class => 'next', :id => "next-#{event.id}"
+%h1= link_to @trip.name, @trip
 
 = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}
+
+#event_info_window= render :partial => 'events/info', :locals => {:event => @trip.events.first}
 
 - @trip.events.each do |event|
   - class_name = @trip.events.first == event ? 'active' : ''

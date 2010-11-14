@@ -16,6 +16,9 @@ Tripmap::Application.routes.draw do
       get :play
     end
     resources :events do
+      member do
+        post :reorder
+      end
       resources :items do
         collection do
           get 'import'

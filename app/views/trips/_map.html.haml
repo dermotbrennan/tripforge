@@ -1,13 +1,20 @@
 - current_event ||= nil
-#event_points
-  - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events + [current_event]).uniq : trip.events
-  - events.each_with_index do |event, i|
-    - if event.latitude.present? && event.longitude.present?
-      - class_name = (event == current_event) || (current_event.nil? && i == 0) ? 'current' : ''
-      .point{:class => class_name}
-        .lng= event.longitude
-        .lat= event.latitude
-        .id= event.id.to_s
-#map_mode= mode ||= nil
-#map
+- mode ||= nil
+#map_wrapper
+  #event_points
+    - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events + [current_event]).uniq : trip.events
+    - events.each_with_index do |event, i|
+      - if event.latitude.present? && event.longitude.present?
+        - class_name = (event == current_event) || (current_event.nil? && i == 0) ? 'current' : ''
+        .point{:class => class_name, :id => "event-point-#{event.id.to_i}"}
+          - if mode && mode == :play_trip
+            .info= render :partial => 'events/info', :locals => {:event => event}
+          - if event.transport_mode
+            .transport_mode_id= event.transport_mode_id
+            .transport_mode_name= event.transport_mode.name.downcase
+          .lng= event.longitude
+          .lat= event.latitude
+          .id= event.id.to_s
+  #map_mode= mode.to_s
+  #map
   

@@ -13,9 +13,30 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @event.attributes = params[:event]
     if @event.save
-      redirect_to trip_path(@event.trip), :success => "Event updated successfully"
+      if request.xhr?
+        render :partial => 'events/summary', :locals => {:event => @event}
+      else
+        redirect_to trip_path(@event.trip), :success => "Event updated successfully"
+      end
     else
-      render :action => :edit
+      if request.xhr?
+        render :text => "Uh oh! Saving failed! Please try again!"
+      else
+        render :action => :edit
+      end
+    end
+  end
+
+  def reorder
+    @event = Event.find(params[:id])
+    if @event.reorder(params[:previous_event_id], params[:next_event_id])
+      if request.xhr?
+        render :partial => 'events/event', :locals => {:event => @event}
+      else
+        redirect_to(@event)
+      end
+    else
+      request.xhr? ? head(:bad_request) : render(:action => :new)
     end
   end
 

@@ -20,7 +20,7 @@ class AccountController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = 'Account registered!'
-      redirect_back_or_default account_path; return
+      redirect_back_or_default trips_path; return
     else
       render :action => :new; return
     end
@@ -34,7 +34,7 @@ class AccountController < ApplicationController
     @user = @current_user # makes our views 'cleaner' and more consistent
     if @user.update_attributes(params[:user])
       flash[:success] = 'Your account has been updated'
-      redirect_to account_path; return
+      redirect_to trips_path; return
     else
       render :action => :edit; return
     end
