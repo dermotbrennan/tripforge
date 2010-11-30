@@ -1,16 +1,14 @@
-%li{:id => "event-#{event.id}"}
+%li{:id => "event-#{event.id}", :class => 'event'}
   .handle
-  .event_id= event.id
+  .event_id.hide= event.id
   .ajax_loading
-  .event_summary= render :partial => 'events/summary', :locals => {:event => event}
-  .event_form= render :partial => 'events/mini_form', :locals => {:event => event}
-
-  .form_buttons
-    == #{link_to 'done', '#', :class => 'save_event_button'} -
-    == #{link_to 'cancel', '#', :class => 'cancel_edit_event_button'}
-
-  .event_actions
-    == #{link_to 'import', import_trip_event_items_path(event.trip, event)} -
-    == #{link_to 'edit', edit_trip_event_path(event.trip, event), :class => 'edit_event_button'} -
-    == #{link_to 'delete', event_path(event), :method => :delete, :confirm => "Are you sure?"}
-
+  .event_summary
+    = render :partial => 'events/summary', :locals => {:event => event}
+    .event_actions
+      == #{link_to 'import', import_trip_event_items_path(event.trip, event)} -
+      == #{link_to 'edit', edit_trip_event_path(event.trip, event), :class => 'edit_event_button'} -
+      == #{link_to 'zoom here', '#', :class => 'goto_event_button'} -
+      == #{link_to 'delete', event_path(event), :method => :delete, :confirm => "Are you sure?", :remote => true, :class => 'delete_event_button'}
+  = render :partial => 'events/mini_form', :locals => {:event => event}
+    
+  

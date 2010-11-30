@@ -6,12 +6,18 @@ class Event < ActiveRecord::Base
   belongs_to :trip
   has_many :items
 
-  belongs_to :next_event, :class_name => "Event"
   belongs_to :transport_mode
-  belongs_to :previous_event, :class_name => "Event"
 
   validates_associated :trip
   validates :name, :presence => true
+
+  def next_event
+    self.trip.events.where(["started_at >= ? AND id != ?", self.started_at, self.id]).first
+  end
+
+  def previous_event
+    self.trip.events.where(["started_at <= ? AND id != ?", self.started_at, self.id]).first
+  end
 
   def has_gphoto?(gphoto_xml)
     gphoto_id = gphoto_xml.elements['gphoto:id'].text
@@ -64,59 +70,23 @@ class Event < ActiveRecord::Base
   def reorder(previous_event_id, next_event_id)
     previous_event_id, next_event_id = previous_event_id.to_i, next_event_id.to_i
 
-    # join the original previous and original nexts together
-    original_previous_event = self.previous_event
-    original_next_event = self.next_event
-    if original_previous_event
-      original_previous_event.next_event = original_next_event
-      original_previous_event.save
-    end
-    if original_next_event
-      original_next_event.previous_event = original_previous_event
-      original_next_event.save
-    end
-    
     # find the new previous and next events
     new_previous_event = Event.find(previous_event_id) if previous_event_id && previous_event_id > 0
     new_next_event = Event.find(next_event_id) if next_event_id && next_event_id > 0
 
-    if (new_previous_event && new_previous_event != self.previous_event) ||
-        (new_next_event && new_next_event != self.next_event)
+    original_time_difference = Math.sqrt((self.ended_at - self.started_at).to_i**2).to_i
 
-      if new_previous_event
-        self.previous_event = new_previous_event
-        new_previous_event.next_event = self
-        new_previous_event.save
-      else
-        self.previous_event = nil
-      end
-
-      if new_next_event
-        self.next_event = new_next_event
-        new_next_event.previous_event = self
-        new_next_event.save
-      else
-        self.next_event = nil
-      end
-
-      # change the times if necessary
-      if self.previous_event && self.previous_event > self.started_at || self.next_event && self.next_event.started_at < self.started_at
-        original_time_difference = Math.sqrt((self.ended_at - self.started_at).to_i**2).to_i
-
-        # half way between previous and next
-        if self.previous_event && self.next_event
-          self.started_at  = self.previous_event.started_at + (self.next_event.started_at - self.previous_event.started_at)/2
-        elsif self.previous_event && self.started_at < self.previous_event.started_at # if this is the last event now
-          self.started_at  = (self.previous_event.started_at + 1.hour)
-        elsif self.next_event && self.started_at > self.next_event.started_at # if this is the first event now
-          self.started_at  = (self.next_event.started_at - 1.hour)
-        else
-        end
-
-        self.ended_at = self.started_at + original_time_difference
-      end
-      
-      save
+    # half way between previous and next
+    if new_previous_event && new_next_event && (new_previous_event.started_at > self.started_at || new_next_event.started_at < self.started_at)
+      self.started_at = new_previous_event.started_at + (new_next_event.started_at - new_previous_event.started_at)/2
+    elsif new_previous_event && self.started_at < new_previous_event.started_at # if this is the last event now
+      self.started_at = (new_previous_event.started_at + 1.hour)
+    elsif new_next_event && self.started_at > new_next_event.started_at # if this is the first event now
+      self.started_at  = (new_next_event.started_at - 1.hour)
+    else
     end
+
+    self.ended_at = self.started_at + original_time_difference
+    save
   end
 end

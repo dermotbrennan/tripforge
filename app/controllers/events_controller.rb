@@ -20,7 +20,7 @@ class EventsController < ApplicationController
       end
     else
       if request.xhr?
-        render :text => "Uh oh! Saving failed! Please try again!"
+        render :text => "Uh oh! Saving failed! Please try again!", :status => :bad_request
       else
         render :action => :edit
       end
@@ -47,9 +47,13 @@ class EventsController < ApplicationController
   def create
     @event = Event.new(params[:event])
     if @event.save
-      redirect_to trip_path(@event.trip), :success => "Event created successfully"
+      if request.xhr?
+        render :partial => 'events/event', :locals => {:event => @event}
+      else
+        redirect_to trip_path(@event.trip), :success => "Event created successfully"
+      end
     else
-      render :action => :new
+      request.xhr? ? head(:bad_request) : render(:action => :new)
     end
   end
 
@@ -59,7 +63,11 @@ class EventsController < ApplicationController
 
   def destroy
     @event = Event.find(params[:id])
-    redirect_to @event.trip, :success => "Event deleted"
-    @event.destroy
+    @trip = @event.trip
+    if @event.destroy
+      request.xhr? ? head(:ok) : redirect_to(@trip, :success => "Event deleted")
+    else
+      request.xhr? ? head(:bad_request) : redirect_to(@trip, :success => "Event not deleted")
+    end
   end
 end

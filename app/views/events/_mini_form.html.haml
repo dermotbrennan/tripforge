@@ -1,4 +1,4 @@
-= semantic_form_for(event) do |f|
+= semantic_form_for(event, :html => {:class => 'event_form'}) do |f|
   %fieldset
     %ul
       = f.input :trip_id, :as => :hidden
@@ -7,3 +7,9 @@
       = f.input :started_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-started_at"}, :wrapper_html => {:class => "datetime_picker"}
       %li.datetime_picker.dates_separator &raquo;
       = f.input :ended_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-ended_at"}, :wrapper_html => {:class => "datetime_picker"}
+  .event_form_buttons
+    - if f.object.new_record?
+      == #{link_to 'save', '#', :id => 'create_event_button'}
+    - else
+      == #{link_to 'done', '#', :class => 'save_event_button'} -
+      == #{link_to 'cancel', '#', :class => 'cancel_edit_event_button'}

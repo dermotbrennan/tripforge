@@ -79,7 +79,7 @@ function Trip(map) {
     destination_marker.path_points = path_points;
     desired_journey_time = 5000;
     destination_marker.frame_rate = desired_journey_time / path_points.length;
-    debug.log(path);
+    //debug.log(path);
 
     this.paths.push(path);
   }
@@ -113,14 +113,14 @@ function Trip(map) {
         
         direction_service.route(direction_request, function(directions_result, directions_status) {
           if (directions_status == 'OK') {
-            debug.log(directions_result);
-            debug.log(directions_result.routes);
+            //debug.log(directions_result);
+            //debug.log(directions_result.routes);
             path_points = directions_result.routes[0].overview_path
 
             trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, path_color);
             // add on the start and end points if the directions werent able to include those.
           } else {
-            debug.log("direction status" + directions_status);
+            //debug.log("direction status" + directions_status);
           }
         })
       } else {      
@@ -139,7 +139,7 @@ function Trip(map) {
       
       return true;
     });
-    debug.log(this.paths);
+    //debug.log(this.paths);
   }
 
   this.moveMarker = function(target_marker, new_position) {
@@ -279,7 +279,7 @@ function Trip(map) {
     if (typeof(stop) == 'undefined') {
       this.travelMarker.setMap(null);
       this.travelMarker.is_moving = false;
-      debug.log('finished');
+      //debug.log('finished');
       return false;
     }
 

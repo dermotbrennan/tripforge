@@ -1,7 +1,7 @@
 - current_event ||= nil
 - mode ||= nil
 #map_wrapper
-  #event_points
+  #event_points.hide
     - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events + [current_event]).uniq : trip.events
     - events.each_with_index do |event, i|
       - if event.latitude.present? && event.longitude.present?
@@ -15,6 +15,6 @@
           .lng= event.longitude
           .lat= event.latitude
           .id= event.id.to_s
-  #map_mode= mode.to_s
+  #map_mode.hide= mode.to_s
   #map
   

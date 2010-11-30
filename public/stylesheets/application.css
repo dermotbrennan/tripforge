@@ -282,7 +282,7 @@ form input[type=submit] {
 }
 
 /* event list */
-ul#events>li {
+ul#events>li, #new_event_wrapper {
   margin: 10px 0px;
   padding: 0px 10px 0px 20px;
   width: 330px;
@@ -290,6 +290,13 @@ ul#events>li {
   position: relative;
   border: 2px solid #666565;
   border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+
+#new_event_wrapper {
+  background-image: none;
+  padding-left: 10px;
+  padding-bottom: 20px;
+  width: 340px;
 }
 
 ul#events>li .handle {
@@ -301,11 +308,7 @@ ul#events>li .handle {
   cursor: move;
 }
 
-ul#events>li .event_id {
-  display: none;
-}
-
-ul#events>li .ajax_loading {
+ul#events>li .ajax_loading, #new_event_wrapper.reloading .ajax_loading {
   background: transparent url(/images/ajax-loader.gif) center center no-repeat;
   position: absolute;
   top: 0px;
@@ -315,49 +318,70 @@ ul#events>li .ajax_loading {
   height: 100%;
 }
 
-ul#events>li.reloading .ajax_loading {
+ul#events>li.reloading .ajax_loading, #new_event_wrapper.reloading .ajax_loading {
   display: block;
 }
 
-ul#events>li.reloading {
+ul#events>li.reloading, #new_event_wrapper.reloading {
   opacity: 0.4;
 }
 
-ul#events>li:hover, ul#events>li:active {
+ul#events>li:hover, ul#events>li:active, #new_event_wrapper:hover {
   border-color: #eb6929;
 }
 
-ul#events .form_buttons {
+ul#events .form_buttons, #new_event_wrapper .form_buttons {
   position: absolute;
   bottom: 0px;
   right: 8px;
 }
 
-ul#events form {
+ul#events form, #new_event_wrapper form {
   width: 100%;
 }
 
-ul#events form li {
+ul#events form li, #new_event_wrapper form li {
   float: left;
-  width: 300px;
+  width: 340px;
 }
 
 ul#events form li input[type=text] {
-  width: 100%;
+  width: 325px;
 }
 
-ul#events li.datetime_picker {
+#new_event_wrapper li input[type=text] {
+  width: 335px;
+}
+
+ul#events form li textarea {
+  width: 320px;
+}
+
+form.event .error {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+#new_event_wrapper li textarea {
+  width: 330px;
+}
+
+ul#events li.datetime_picker, #new_event_wrapper li.datetime_picker {
   float: left;
-  width: 145px;
+  width: 155px;
 }
 
-ul#events input.datetime_picker {
-  width: 100%;
-  font-size: 13px;
+#new_event_wrapper li.datetime_picker {
+  width: 160px;
 }
 
-ul#events li.datetime_picker.dates_separator {
-  width: auto;
+input.datetime_picker {
+  width: 100% !important;
+  font-size: 13px !important;
+}
+
+li.datetime_picker.dates_separator {
+  width: auto !important;
   font-size: 11px;
   margin: 0px 5px;
   line-height: 20px;
@@ -370,10 +394,6 @@ ul#events li.datetime_picker.dates_separator {
 }
 
 /* maps */
-#event_points, #map_mode {
-  display: none; 
-}
-
 body#body-trips-show #map_wrapper {
   float: right;
   width: 480px;

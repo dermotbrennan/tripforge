@@ -1,7 +1,6 @@
 %h2= event.name
 .description= nl2br(event.description)
-%p
-  == #{event.started_at} - #{event.ended_at} in #{event.location}
+%p= event.duration_description
 .items
   - if !event.items.empty?
     %ul= render :partial => 'items/mini_item', :collection => event.items
