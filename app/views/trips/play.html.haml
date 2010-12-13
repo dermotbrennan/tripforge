@@ -2,7 +2,7 @@
 
 = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}
 
-#event_info_window= render :partial => 'events/info', :locals => {:event => @trip.events.first}
+#event_info_container= render :partial => 'events/info', :locals => {:event => @trip.events.first}
 
 - @trip.events.each do |event|
   - class_name = @trip.events.first == event ? 'active' : ''

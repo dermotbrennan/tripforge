@@ -182,6 +182,7 @@ form input[type=submit] {
   width: 940px;
   padding: 10px 10px;
   overflow: hidden;
+  position: relative;
 }
 
 #sidebar {
@@ -286,10 +287,19 @@ ul#events>li, #new_event_wrapper {
   margin: 10px 0px;
   padding: 0px 10px 0px 20px;
   width: 330px;
-  background: #eaebeb url(/images/handle-bg.png) top left repeat-y;
+  background-color: #eaebeb;
   position: relative;
   border: 2px solid #666565;
   border-radius: 2px; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+
+ul#events>li {
+  /* background properties split out like this because
+    we want to use the highlight effect and have a background image
+    at the same time */
+  background-position: top left !important;
+  background-repeat: repeat-y !important;
+  background-image: url(/images/handle-bg.png) !important;
 }
 
 #new_event_wrapper {
@@ -388,6 +398,30 @@ li.datetime_picker.dates_separator {
   text-align: center;
 }
 
+li.event.positionless a.zoom_event_button {
+  display: none;
+}
+
+li.event.positionless .marker {
+  float: right;
+  width: 12px;
+  height: 20px;
+  background: transparent url("http://labs.google.com/ridefinder/images/mm_20_red.png") top left no-repeat;
+  cursor: pointer;
+}
+
+form.event #event_transport_mode_input label {
+  float: left;
+  width: auto;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+form.event #event_transport_mode_input select {
+  float: left;
+}
+
+
 /* anytime datepicker overrides */
 .AnyTime-win {
   z-index: 3000;
@@ -404,6 +438,7 @@ body#body-trips-show #map {
   width: 480px;
   height: 480px;
   border: 1px inset #e66323;
+  position: relative;
 }
 
 body#body-trips-play #main-content {
@@ -418,7 +453,14 @@ body#body-trips-play #map {
   z-index: -1 !important;
 }
 
-body#body-trips-play #event_info_window {
+body#body-trips-show #map.drophover {
+  border: 1px outset #eb6929;
+  box-shadow: 0px 0px 15px #eb6929;
+  -moz-box-shadow: 0px 0px 15px #eb6929;
+  -webkit-box-shadow: 0px 0px 15px #eb6929;
+}
+
+body#body-trips-play #event_info_container {
   width: 350px;
   max-height: 700px;
   background-color: #efefef;

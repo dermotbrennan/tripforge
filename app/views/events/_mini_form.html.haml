@@ -4,9 +4,11 @@
       = f.input :trip_id, :as => :hidden
       = f.input :name, :required => true, :label => false
       = f.input :description, :as => :text, :required => false, :label => false
-      = f.input :started_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-started_at"}, :wrapper_html => {:class => "datetime_picker"}
+      = f.input :started_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-started_at", :value => f.object.started_at.to_s}, :wrapper_html => {:class => "datetime_picker"}, :value => f.object.started_at.to_s
       %li.datetime_picker.dates_separator &raquo;
-      = f.input :ended_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-ended_at"}, :wrapper_html => {:class => "datetime_picker"}
+      = f.input :ended_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-ended_at", :value => f.object.ended_at.to_s}, :wrapper_html => {:class => "datetime_picker"}
+      - unless f.object.trip.events.empty?
+        = f.input :transport_mode, :label => "Got here by...", :include_blank => false
   .event_form_buttons
     - if f.object.new_record?
       == #{link_to 'save', '#', :id => 'create_event_button'}

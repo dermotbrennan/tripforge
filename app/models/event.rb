@@ -9,7 +9,7 @@ class Event < ActiveRecord::Base
   belongs_to :transport_mode
 
   validates_associated :trip
-  validates :name, :presence => true
+  validates :name, :transport_mode_id, :presence => true
 
   def next_event
     self.trip.events.where(["started_at >= ? AND id != ?", self.started_at, self.id]).first
@@ -88,5 +88,9 @@ class Event < ActiveRecord::Base
 
     self.ended_at = self.started_at + original_time_difference
     save
+  end
+
+  def positionless?
+    self.latitude.blank? && self.longitude.blank?
   end
 end

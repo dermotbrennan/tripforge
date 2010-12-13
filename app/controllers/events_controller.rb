@@ -1,4 +1,6 @@
 class EventsController < ApplicationController
+  respond_to :html, :json
+
   def new
     trip = Trip.find(params[:trip_id])
     time = trip.events.last.try(:ended_at) || Time.now
@@ -14,7 +16,10 @@ class EventsController < ApplicationController
     @event.attributes = params[:event]
     if @event.save
       if request.xhr?
-        render :partial => 'events/summary', :locals => {:event => @event}
+        respond_with(@event) do |format|
+          format.json { render :json => {'success' => true} }
+          format.html { render :partial => 'events/summary', :locals => {:event => @event}}
+        end
       else
         redirect_to trip_path(@event.trip), :success => "Event updated successfully"
       end

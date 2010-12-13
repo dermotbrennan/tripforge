@@ -11,10 +11,8 @@
             .info= render :partial => 'events/info', :locals => {:event => event}
           - if event.transport_mode
             .transport_mode_id= event.transport_mode_id
-            .transport_mode_name= event.transport_mode.name.downcase
           .lng= event.longitude
           .lat= event.latitude
           .id= event.id.to_s
   #map_mode.hide= mode.to_s
   #map
-  

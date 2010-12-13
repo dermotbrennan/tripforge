@@ -1,7 +1,9 @@
-%h2= event.name
-.description= nl2br(event.description)
-%p
-  == #{event.duration_description}
-.items
-  - if !event.items.empty?
-    %ul= render :partial => 'items/mini_item', :collection => event.items
+.event_summary_inner
+  .marker{:id => "marker_for_event-#{event.id}", :"data-transport_mode_id" => event.transport_mode_id}
+  %h2= event.name
+  .description= nl2br(event.description)
+  %p
+    == #{event.duration_description}
+  .items
+    - if !event.items.empty?
+      %ul= render :partial => 'items/mini_item', :collection => event.items

@@ -1,4 +1,5 @@
-%li{:id => "event-#{event.id}", :class => 'event'}
+- class_name = event.positionless? ? 'positionless' : ''
+%li{:id => "event-#{event.id}", :class => "event #{class_name}"}
   .handle
   .event_id.hide= event.id
   .ajax_loading
@@ -7,7 +8,7 @@
     .event_actions
       == #{link_to 'import', import_trip_event_items_path(event.trip, event)} -
       == #{link_to 'edit', edit_trip_event_path(event.trip, event), :class => 'edit_event_button'} -
-      == #{link_to 'zoom here', '#', :class => 'goto_event_button'} -
+      == #{link_to 'zoom here', '#', :class => "zoom_event_button"} -
       == #{link_to 'delete', event_path(event), :method => :delete, :confirm => "Are you sure?", :remote => true, :class => 'delete_event_button'}
   = render :partial => 'events/mini_form', :locals => {:event => event}
     

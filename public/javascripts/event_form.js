@@ -5,6 +5,7 @@ jQuery.fn.event_formify = function() {
   var event_summary = event_list_item.find('.event_summary');
 
   this.initForm = function() {
+    this.show();
     // time picker
     this.find('input.datetime_picker').AnyTime_noPicker();
     this.find('input.datetime_picker').AnyTime_picker({format: "%H:%i %a %d/%b/%Y"});
@@ -25,23 +26,42 @@ jQuery.fn.event_formify = function() {
     return false;
   });
 
-  // saving
+  // saving an existing event
   save_event_buttons = this.find('a.save_event_button');
   save_event_buttons.live('click', function() {
     event_form.hideForm();
     event_summary.css('visibility', 'hidden');
     event_summary.show();
     event_list_item.addClass('reloading');
-
-    event_id = event_list_item.find('.event_id').text();
+    var event_id = event_list_item.find('.event_id').text();
     trip_id = event_form.find('input#event_trip_id').val();
     form_data = event_form.serialize();
-    $.post('/trips/'+trip_id+'/events/'+event_id, form_data, function(data) {
+    form_attributes = event_form.serializeArray();
+    var event = new Event(event_id);
+    //event.setAttributes(form_attributes);
+    event.setDataAndAttributes(form_data, form_attributes);
+    if (event.isValid()) {
+      event.update({datatype: 'html',
+        success: function( objResponse ){
+          event_form.find('.error').remove(); // remove any error messages
+          trip.updateEvent(event_id, event.attributes);
+          event_summary.find('.event_summary_inner').remove();
+          event_summary.prepend(objResponse);
+        },
+        error: function( objRequest ){
+          event_form.prepend("<div class='errors'>Errors</div>");
+        },
+        complete: function( objRequest ){
+          event_list_item.removeClass('reloading');
+          event_summary.css('visibility', 'visible');
+        }}
+      );
+    } else {
+      event_form.initForm();
+      event_summary.hide();
       event_list_item.removeClass('reloading');
-      event_summary.css('visibility', 'visible');
-      event_summary.html(data);
-    });
-
+      event_form.displayFormValidationErrors(event.errors);
+    }
     return false;
   });
 
@@ -53,7 +73,8 @@ jQuery.fn.event_formify = function() {
     form_data = event_form.serialize();
     form_attributes = event_form.serializeArray();
     debug.log(form_data);
-    event = new Event(form_data, form_attributes);
+    event = new Event();
+    event.setDataAndAttributes(form_data, form_attributes);
     if (event.isValid()) {
       event.save({success: function( objResponse ){
           event_form[0].reset(); // reset new event form
