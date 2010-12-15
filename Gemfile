@@ -21,6 +21,10 @@ gem 'will_paginate', "~> 3.0.pre2"
 gem 'find_by_param'
 
 
+# heroku
+group :production do
+  gem 'pg'
+end
 
 # Use unicorn as the web server
 # gem 'unicorn'
