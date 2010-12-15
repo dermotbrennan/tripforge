@@ -28,7 +28,7 @@ GEM
       activemodel (= 3.0.3)
       activesupport (= 3.0.3)
     activesupport (3.0.3)
-    arel (2.0.4)
+    arel (2.0.6)
     authlogic (2.1.6)
       activesupport
     bcrypt-ruby (2.1.2)
@@ -38,25 +38,26 @@ GEM
     find_by_param (0.1.0)
       activerecord (>= 2.3)
       activesupport (>= 2.3)
-    formtastic (1.2.0)
+    formtastic (1.2.2)
       actionpack (>= 2.3.7)
       activesupport (>= 2.3.7)
       i18n (>= 0.4.0)
     gdata_19 (1.1.2)
     haml (3.0.24)
-    i18n (0.4.2)
-    mail (2.2.10)
+    i18n (0.5.0)
+    mail (2.2.12)
       activesupport (>= 2.3.6)
-      i18n (~> 0.4.1)
+      i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.16)
     oauth (0.4.4)
     oauth-plugin (0.3.14)
       oauth (>= 0.3.5)
-    paperclip (2.3.5)
+    paperclip (2.3.7)
       activerecord
       activesupport
+    pg (0.10.0)
     polyglot (0.3.1)
     rack (1.2.1)
     rack-mount (0.6.13)
@@ -98,6 +99,7 @@ DEPENDENCIES
   oauth
   oauth-plugin
   paperclip (>= 2.3.3)
+  pg
   rails (= 3.0.3)
   sqlite3-ruby
   truncate_html (= 0.3.2)
