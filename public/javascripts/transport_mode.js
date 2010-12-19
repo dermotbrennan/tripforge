@@ -25,8 +25,8 @@ TransportMode.ICONS = {
 
 TransportMode.DATA = [
   null,
-  {id: 1, name: "Walking", code: "walking", uppercase_code: "WALKING", color: "#00FC00", icon: TransportMode.ICONS['walking']},
-  {id: 2, name: "Driving", code: "driving", uppercase_code: "DRIVING", color: "#0000FC", icon: TransportMode.ICONS['driving']},
-  {id: 3, name: "Airplane", code: "airplane", uppercase_code: "AIRPLANE", color: "#FC0000", icon: TransportMode.ICONS['airplane']}
+  {id: 1, name: "Walking", code: "walking", uppercase_code: "WALKING", color: "#00FC00", icon: TransportMode.ICONS['walking']()},
+  {id: 2, name: "Driving", code: "driving", uppercase_code: "DRIVING", color: "#0000FC", icon: TransportMode.ICONS['driving']()},
+  {id: 3, name: "Airplane", code: "airplane", uppercase_code: "AIRPLANE", color: "#FC0000", icon: TransportMode.ICONS['airplane']()}
 ];
 

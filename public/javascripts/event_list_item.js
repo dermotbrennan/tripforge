@@ -84,8 +84,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
     revert: 'invalid',
     start: function(e, ui) {
       // modify map to make it take a new marker
-      event_id = cleanEventId(e.toElement.parentElement.parentElement.id);
-
+      event_id = cleanEventId($(e.target).parent().parent().attr('id'));
     }, 
     stop: function(e, ui) {
       //if (typeof(ui.map_drag_listener) != 'undefined')

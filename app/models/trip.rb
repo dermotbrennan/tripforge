@@ -3,7 +3,6 @@ class Trip < ActiveRecord::Base
   has_many :events
 
   validates :name, :presence => true
-  validates :description, :presence => true
 
   def reorder_events(event_ids)
     event_ids.each_with_index do |event_id, i|

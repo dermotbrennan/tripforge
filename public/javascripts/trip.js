@@ -20,7 +20,7 @@ function Trip(map, map_mode) {
 
   this.fitBounds = function(bounds) {
     if (typeof(bounds) == 'undefined') bounds = this.getBounds();
-    this.map.fitBounds(bounds);
+    if (bounds.length > 0) this.map.fitBounds(bounds);
   }
 
   this.buildMarker = function(point) {
@@ -188,19 +188,22 @@ function Trip(map, map_mode) {
       return false;
     }
 
-    marker = trip.findMarkerByEventId(event_id);
-    if (isDefined(event_attributes.latitude) && isDefined(event_attributes.longitude)) {
-      new_position = new google.maps.LatLng(event_attributes['latitude'], event_attributes['longitude']);
-      if (marker.position != new_position) {
-        marker.position = new_position;
-        this.addRoute();
+    var marker = trip.findMarkerByEventId(event_id);
+    if (isDefined(marker)) {
+      if (isDefined(event_attributes.latitude) && isDefined(event_attributes.longitude)) {
+        new_position = new google.maps.LatLng(event_attributes['latitude'], event_attributes['longitude']);
+        if (marker.position != new_position) {
+          marker.position = new_position;
+          this.addRoute();
+        }
       }
-    }
-    if (isDefined(event_attributes['transport_mode_id'])) {
-      new_transport_mode = new TransportMode(event_attributes['transport_mode_id']);
-      if (marker.transport_mode.id != new_transport_mode.id) {
-        marker.transport_mode = new_transport_mode;
-        this.addRoute();
+      if (isDefined(event_attributes['transport_mode_id'])) {
+        new_transport_mode = new TransportMode(event_attributes['transport_mode_id']);
+        debug.log(marker);
+        if (!isDefined(marker.transport_mode) || marker.transport_mode.id != new_transport_mode.id) {
+          marker.transport_mode = new_transport_mode;
+          this.addRoute();
+        }
       }
     }
     

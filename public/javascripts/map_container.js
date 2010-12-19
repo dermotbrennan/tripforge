@@ -14,9 +14,10 @@ function MapContainer(jquery_obj, map_mode) {
   }
 
   this.init_map = function() {
+    trip_center = getUserLocation();
     myOptions = {
       zoom: 6,
-      //center: trip_center,
+      center: trip_center,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     this.map = new google.maps.Map(this.element[0], myOptions);
@@ -60,23 +61,60 @@ function MapContainer(jquery_obj, map_mode) {
 
           // add the marker to map
           transport_mode_id = marker_el.data('transport_mode_id');
-          google.maps.event.trigger(map, 'addmarker', latlng, event_id, transport_mode_id);
+          //google.maps.event.trigger(map, 'addmarker', latlng, event_id, transport_mode_id);
+          trip.addMarker(latlng, false, event_id, transport_mode_id);
+          trip.addRoute();
 
           // remove the old marker
-          marker_el.remove();
+          marker_el.hide();
           $("#event-"+event_id).removeClass('positionless');
           
           // find event and update with new position
           event = new Event(event_id);
           event.setAttributes({latitude: latlng.lat(), longitude: latlng.lng()})
-          event.update({success: function(){ debug.log('successfully updated event');}});
+          event.update({success: function(){ 
+              debug.log('successfully updated event');
+              marker_el.remove();
+            }, error: function() {
+              debug.log('failed to up update event');
+              marker_el.show().css({top: 0, left: 0});
+              $("#event-"+event_id).addClass('positionless');
+              trip.removeEvent(event_id);
+            }
+          });
         }
       }
     });
-    google.maps.event.addListener(this.map, 'addmarker', function(position, event_id, transport_mode_id) {
-      trip.addMarker(position, false, event_id, transport_mode_id);
-      trip.addRoute();
-    });
+    //google.maps.event.addListener(this.map, 'addmarker', function(position, event_id, transport_mode_id) {
+      
+    //});
+  }
+
+  function getUserLocation() {
+    var initialLocation;
+
+    // Try W3C Geolocation (Preferred)
+    if(navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+      }, function() {
+        // couldnt determine current position 
+      });
+    // Try Google Gears Geolocation
+    } else if (google.gears) {
+      var geo = google.gears.factory.create('beta.geolocation');
+      geo.getCurrentPosition(function(position) {
+        initialLocation = new google.maps.LatLng(position.latitude,position.longitude);
+      }, function() { // couldnt determine current position
+      });
+    } else {
+      // Browser doesn't support Geolocation
+    }
+
+    dublin = new google.maps.LatLng(53.344104,-6.267494);
+    defaultLocation = dublin;
+
+    return (initialLocation || defaultLocation);
   }
 
   return this;

@@ -9,7 +9,9 @@ class Event < ActiveRecord::Base
   belongs_to :transport_mode
 
   validates_associated :trip
-  validates :name, :transport_mode_id, :presence => true
+  validates :name, :started_at, :ended_at, :presence => true
+  validates :transport_mode_id, :presence => true, :if => proc {|e| e.trip.events.present? }
+  validate :check_times
 
   def next_event
     self.trip.events.where(["started_at >= ? AND id != ?", self.started_at, self.id]).first
@@ -30,6 +32,10 @@ class Event < ActiveRecord::Base
   # 12:00 12th-15th October 2010
   # 12:35, 12th June 2010 - 15:45, 15th June 2011
   def duration_description(include_distance = true)
+    unless self.started_at.respond_to?(:strftime) && self.ended_at.respond_to?(:strftime)
+      return "Unknown duration"
+    end
+    
     description = ''
     start_day = (self.started_at.to_i / 86400).floor
     start_time = self.started_at.strftime("%H:%M")
@@ -92,5 +98,13 @@ class Event < ActiveRecord::Base
 
   def positionless?
     self.latitude.blank? && self.longitude.blank?
+  end
+
+  private
+  def check_times
+    unless self.started_at.respond_to?(:strftime) && self.ended_at.respond_to?(:strftime) &&
+        self.ended_at >= self.started_at
+      self.errors.add(:base, "Event can't end before it starts")
+    end
   end
 end

@@ -90,7 +90,7 @@ function Event(id) {
   this.occursAfter = function(started_at_attr_name, ended_at_attr_name) {
     started_at = this.attributes[started_at_attr_name],
     ended_at = this.attributes[ended_at_attr_name];
-    if (ended_at > started_at) {
+    if (typeof(started_at) != "string" && typeof(ended_at) != "string" && ended_at >= started_at) {
       return true;
     } else {
       this.errors.push(['dates_error', "event can't end before it starts"]);

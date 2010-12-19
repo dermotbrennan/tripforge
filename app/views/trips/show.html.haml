@@ -3,18 +3,20 @@
 #trip_id.hide= @trip.id
 
 #trip_details_actions
-  = nl2br(@trip.description)
+  #trip_description
+    - if @trip.description.present?
+      = nl2br(@trip.description)
+    - else
+      No description.
 
   #trip_actions
     = link_to 'PLAY', {:action => 'play'}, :id => 'play_trip_button', :class => 'trip_button'
     = link_to 'SHARE', {:action => 'share'}, :id => 'share_trip_button', :class => 'trip_button'
 
-- unless @trip.events.empty?
-  = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :trip_overview}
-  %ul#events= render :partial => 'events/event', :collection => @trip.events
-- else
-  %p
-    No events yet.
+= render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :trip_overview}
+%ul#events
+  - unless @trip.events.empty?
+    = render :partial => 'events/event', :collection => @trip.events
 
 #new_event_wrapper
   .handle

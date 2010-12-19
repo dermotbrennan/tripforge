@@ -1,8 +1,9 @@
 %h1 My Trips
 
 - unless @trips.empty?
-  %ul#trips= render :partial => 'trips/trip', :collection => @trips
+  %ul#trips
+    = render :partial => 'trips/trip', :collection => @trips
+    %li= link_to 'New Trip', new_trip_path
 - else
-  #none_found
-    No trips found. #{link_to 'Start one', new_trip_path}
+  #none_found No trips found.
 

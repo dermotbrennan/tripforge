@@ -1,14 +1,16 @@
 function MapNavigation(selector, trip) {
   this.nav_el = $(selector);
   if (this.nav_el.length == 0) debug.log('No valid navigation element!');
+  var map_nav = this;
   
   this.nav_el.find('.current_event a').click(function() {
-    event_id = this.nav_el.filter('.active').
+    event_id = map_nav.nav_el.filter('.active').
       find('.current_event .current_event_id').text();
     trip.panToMarker(trip.findMarkerByEventId(event_id));
   });
 
   this.nav_el.find('.event_nav_button a').click(function() {
+    
     event_id = $(this).parents('.event_nav_button').find('.event_id').text();
     marker = trip.findMarkerByEventId(event_id);
     if (marker != null) {
@@ -17,7 +19,7 @@ function MapNavigation(selector, trip) {
         if (typeof(trip.travelMarker) != 'undefined' && !trip.travelMarker.is_moving) {
           clearInterval(intervalIdent);
           trip.setCurrent(marker);
-          activateNavForEvent(event_id);
+          map_nav.showEvent(event_id);
           return;
         }
       }), 50);

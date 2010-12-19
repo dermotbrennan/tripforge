@@ -4,7 +4,7 @@ function cleanEventId(event_el_id) {
 }
 
 function isDefined(variable) {
-  return (typeof(variable) != 'undefined');
+  return (!!variable && typeof(variable) != 'undefined');
 }
 
 function orDefault(variable, default_value) {

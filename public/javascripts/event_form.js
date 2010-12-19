@@ -47,6 +47,7 @@ jQuery.fn.event_formify = function() {
           trip.updateEvent(event_id, event.attributes);
           event_summary.find('.event_summary_inner').remove();
           event_summary.prepend(objResponse);
+          event_list.event_listify(); // re-add the jquery magic to make new list sortable and stuff
         },
         error: function( objRequest ){
           event_form.prepend("<div class='errors'>Errors</div>");
