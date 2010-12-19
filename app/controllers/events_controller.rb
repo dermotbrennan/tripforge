@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   respond_to :html, :json
+  before_filter :require_user
 
   def new
     trip = Trip.find(params[:trip_id])

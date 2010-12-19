@@ -1,4 +1,6 @@
 class TripsController < ApplicationController
+  before_filter :require_user
+  
   def new
     @trip = Trip.new
   end

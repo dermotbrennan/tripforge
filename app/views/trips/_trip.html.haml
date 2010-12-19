@@ -1,3 +1,4 @@
 %li
-  %h2.name= link_to trip.name, trip
-  .description= truncate_html(nl2br(trip.description), :length => 100)
+  = link_to trip do
+    %h2.name= trip.name
+    .description= truncate_html(nl2br(trip.description), :length => 100)

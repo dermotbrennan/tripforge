@@ -80,14 +80,14 @@ form li label {
   font-weight: bold;
 }
 
-form li input[type=text], form li input[type=password] {
+form li input[type=text], form li input[type=email], form li input[type=password] {
   width: 100%;
   color: #222;
   line-height: 140%;
   font-size: 18px;
 }
 
-form li input[type=text]:focus, form li input[type=password]:focus {
+form li input[type=text]:focus, form li input[type=email]:focus, form li input[type=password]:focus {
   background: #f8e9e1;
 }
 
@@ -101,9 +101,8 @@ form li textarea {
 }
 
 form input[type=submit] {
-  color: #eb6929;
-  background-color: #fff;
-  border: 1px outset #fff;
+  color: #fff;
+  background-color: #eb6929;
   cursor: pointer;
   font-weight: bold;
   font-size: 18px;
@@ -152,11 +151,23 @@ form input[type=submit] {
 
 #header #logo {
   float: left;
-  background: transparent url(/images/logo.png) top left no-repeat;
-  width: 124px;
+  width: auto;
   height: 46px;
+  line-height: 46px;
   margin-top: 9px;
-  text-indent: -999em;
+  padding: 0px 8px;
+  color: #EEE;
+  font-size: 33px;
+  font-style: italic;
+  text-shadow: #957A5C 1px -1px 2px;
+  text-decoration: none;
+  background-color: #eb6a29;
+  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;
+  box-shadow: 0px 0px 5px #EB6A29; -moz-box-shadow: 0px 0px 5px #EB6A29; -webkit-box-shadow: 0px 0px 5px #EB6A29;
+}
+
+#header #logo:hover {
+  box-shadow: 0px 0px 0px #EB6A29; -moz-box-shadow: 0px 0px 0px #EB6A29; -webkit-box-shadow: 0px 0px 0px #EB6A29;
 }
 
 /* content_for_layout container */
@@ -265,10 +276,37 @@ form input[type=submit] {
   -webkit-box-shadow: 0px 0px 5px #eb6929;
 }
 
+#trips li.new_trip {
+  background: #fff;
+}
+
+#trips li.new_trip a {
+  display: block;
+  color: #555;
+  text-decoration: none;
+  font-size: 24px;
+  line-height: 110px;
+  width: 100%;
+  text-align: center;
+}
+
+#trips li.new_trip a:hover {
+  text-shadow: none;
+}
+
+#trips li a {
+  display: block;
+  float: left;
+  height: 110px;
+  width: 100%;
+}
+
 #trips li h2 {
   position: absolute;
   bottom: 0px;
   left: 0px;
+  font-size: 24px;
+  color: #000;
   line-height: 50px;
   margin: 0px;
   padding: 0px 20px;
@@ -276,12 +314,6 @@ form input[type=submit] {
   border-bottom-left-radius: 10px; -moz-border-radius-bottomleft: 10px;
   border-bottom-right-radius: 10px; -moz-border-radius-bottomright: 10px;
   background-color: rgba(109,109,109,0.6);
-}
-
-#trips li h2 a {
-  text-decoration: none;
-  font-size: 24px;
-  color: #000;
 }
 
 #trips li .description {

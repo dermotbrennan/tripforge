@@ -1,4 +1,6 @@
 class ItemsController < ApplicationController
+  before_filter :require_user
+  
   def new
     @event = Event.find(params[:event_id])
     @item = Item.new(:event => @event)

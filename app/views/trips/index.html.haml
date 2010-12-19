@@ -3,7 +3,6 @@
 - unless @trips.empty?
   %ul#trips
     = render :partial => 'trips/trip', :collection => @trips
-    %li= link_to 'New Trip', new_trip_path
+    %li.new_trip= link_to 'New Trip', new_trip_path
 - else
   #none_found No trips found.
-

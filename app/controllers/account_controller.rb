@@ -10,12 +10,10 @@ class AccountController < ApplicationController
   end
 
   def new
-    require_admin_signups
     @user = User.new
   end
 
   def create
-    require_admin_signups
     current_user_session.try(:destroy)
     @user = User.new(params[:user])
     if @user.save
@@ -47,13 +45,4 @@ class AccountController < ApplicationController
     flash[:notice] = 'Your account has been deleted!'
     redirect_to :root; return
   end
-
-private
-  def require_admin_signups
-    if !is_admin? && User.count > 0
-      flash[:notice] = 'You must be logged in as an admin for signups'
-      redirect_to login_path; return
-    end
-  end
-
 end
