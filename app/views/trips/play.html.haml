@@ -1,11 +1,13 @@
+- events = @trip.events.by_started_at(:asc)
+- first_event = events.first
 %h1= link_to @trip.name, @trip
 
 = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}
 
-#event_info_container= render :partial => 'events/info', :locals => {:event => @trip.events.first}
+#event_info_container= render :partial => 'events/info', :locals => {:event => first_event}
 
-- @trip.events.each do |event|
-  - class_name = @trip.events.first == event ? 'active' : ''
+- events.each do |event|
+  - class_name = first_event == event ? 'active' : ''
   .map_navigation{:id => "map-navigation-#{event.id}", :class => class_name}
     .prev_event.event_nav_button
       - if event.previous_event

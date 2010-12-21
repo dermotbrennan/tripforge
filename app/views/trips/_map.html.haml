@@ -2,7 +2,7 @@
 - mode ||= nil
 #map_wrapper
   #event_points.hide
-    - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events + [current_event]).uniq : trip.events
+    - events = (current_event && current_event.latitude.present? && current_event.longitude.present?) ? (trip.events.by_started_at(:asc) + [current_event]).uniq : trip.events.by_started_at(:asc)
     - events.each_with_index do |event, i|
       - if event.latitude.present? && event.longitude.present?
         - class_name = (event == current_event) || (current_event.nil? && i == 0) ? 'current' : ''

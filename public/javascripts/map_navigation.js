@@ -10,7 +10,6 @@ function MapNavigation(selector, trip) {
   });
 
   this.nav_el.find('.event_nav_button a').click(function() {
-    
     event_id = $(this).parents('.event_nav_button').find('.event_id').text();
     marker = trip.findMarkerByEventId(event_id);
     if (marker != null) {
@@ -20,6 +19,7 @@ function MapNavigation(selector, trip) {
           clearInterval(intervalIdent);
           trip.setCurrent(marker);
           map_nav.showEvent(event_id);
+          trip.event_info_container.showEvent(event_id);
           return;
         }
       }), 50);

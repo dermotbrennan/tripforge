@@ -5,6 +5,7 @@ function Trip(map, map_mode) {
 
   this.map = map;
   this.map_mode = map_mode;
+  this.path_points = {};
 
   if (this.map_mode == MapMode.EDIT_EVENT_LOCATION) {
     this.addPlaceableMarkerListener();
@@ -20,7 +21,7 @@ function Trip(map, map_mode) {
 
   this.fitBounds = function(bounds) {
     if (typeof(bounds) == 'undefined') bounds = this.getBounds();
-    if (bounds.length > 0) this.map.fitBounds(bounds);
+    if (!bounds.isEmpty()) this.map.fitBounds(bounds);
   }
 
   this.buildMarker = function(point) {
@@ -64,7 +65,7 @@ function Trip(map, map_mode) {
     this.markers.push(marker);
   }
 
-  this.addRouteCallback = function(path_points, destination_marker, origin_position, destination_position, path_color) {
+  this.addRouteCallback = function(path_points, destination_marker, origin_position, destination_position, transport_mode) {
     // add the start and end positions if theyre not already there
     if (path_points[0] != origin_position) path_points.unshift(origin_position);
     if (path_points[path_points.length-1] != destination_position) path_points.push(destination_position);
@@ -72,14 +73,15 @@ function Trip(map, map_mode) {
     // draw path
     path = new google.maps.Polyline({
       path: path_points,
-      strokeColor: path_color,
+      strokeColor: transport_mode.color,
       strokeOpacity: 0.8,
       strokeWeight: 2
     });
     path.setMap(this.map);
-    destination_marker.path_points = path_points;
     desired_journey_time = 5000;
-    destination_marker.frame_rate = desired_journey_time / path_points.length;
+    frame_rate = desired_journey_time / path_points.length;
+    this.path_points[[origin_position, destination_position]] = [path_points, frame_rate, transport_mode, "straight-"+destination_marker.event_id];
+    this.path_points[[destination_position, origin_position]] = [path_points.slice(0).reverse(), frame_rate, transport_mode, "reverse-"+destination_marker.event_id];
     //debug.log(path);
 
     this.paths.push(path);
@@ -100,17 +102,18 @@ function Trip(map, map_mode) {
     $.each(this.markers, function(i, origin_marker) {
       var destination_marker = trip.markers[i+1];
       if (typeof(destination_marker) == 'undefined') return null;
+      debug.log(origin_marker.event_id, destination_marker.event_id);
 
-      var path_color = destination_marker.transport_mode.color;
+      var transport_mode = destination_marker.transport_mode;
       var origin_position = origin_marker.getPosition();
       var destination_position = destination_marker.getPosition();
       var path_points = new Array();
 
-      if (destination_marker.transport_mode.code.match(/walking|driving/)) {
+      if (transport_mode.code.match(/walking|driving/)) {
         direction_service = new google.maps.DirectionsService();
         direction_request = {
           origin: origin_position, destination: destination_position,
-          travelMode: destination_marker.transport_mode.uppercase_code,
+          travelMode: transport_mode.uppercase_code,
           provideRouteAlternatives: false
         };
         
@@ -119,7 +122,7 @@ function Trip(map, map_mode) {
             //debug.log(directions_result);
             //debug.log(directions_result.routes);
             path_points = directions_result.routes[0].overview_path
-            trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, path_color);
+            trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, transport_mode);
             // add on the start and end points if the directions werent able to include those.
           } else {
             //debug.log("direction status" + directions_status);
@@ -135,7 +138,7 @@ function Trip(map, map_mode) {
             origin_position.lng() + (((destination_position.lng() - origin_position.lng())*parseFloat(i))/parseFloat(num_points))
           );
         }
-        trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, path_color);
+        trip.addRouteCallback(path_points, destination_marker, origin_position, destination_position, transport_mode);
       }
      
       return true;
@@ -345,22 +348,35 @@ function Trip(map, map_mode) {
   }
 
   this.animateBetweenMarkers = function(start_marker, end_marker) {
-    start_point = start_marker.getPosition();
-    end_point = end_marker.getPosition();
-    
-    icon = end_marker.transport_mode.icon;
-    this.travelMarker = new google.maps.Marker({map: this.map, position: start_point, icon: icon});
-    this.travelMarker.stops = end_marker.path_points;
-    this.travelMarker.frame_rate = end_marker.frame_rate;
-    this.travelMarker.is_moving = true;
-    this.travelMarker.current_stop_index = 0;
+    debug.log(start_marker, end_marker);
+    var start_point = start_marker.getPosition();
+    var end_point = end_marker.getPosition();
+    debug.log("markers: ", start_point, end_point);
 
-    setTimeout(function(thisObj) {thisObj.moveTravelMarkerThroughStops()}, this.travelMarker.frame_rate, this);
-    //this.travelMarker.refitBoundsInterval = setInterval(function(thisObj) { thisObj.fitBoundsToTravelMarker() }, 50, this);
+    path_points_arr = this.path_points[[start_point, end_point]];
+    debug.log("path points: ", path_points_arr);
+    debug.log("lat for first point: ", path_points_arr[0][0].lat());
+    if (isDefined(path_points_arr)) {
+      var path_points = path_points_arr[0];
+      var frame_rate = path_points_arr[1];
+      var transport_mode = path_points_arr[2];
+      var debug_str = path_points_arr[3];
+      debug.log(debug_str);
+
+      this.travelMarker = new google.maps.Marker({map: this.map, position: path_points[0], icon: transport_mode.icon});
+      this.travelMarker.stops = path_points;
+      this.travelMarker.frame_rate = frame_rate;
+      this.travelMarker.is_moving = true;
+      this.travelMarker.current_stop_index = 0;
+
+      setTimeout(function(thisObj) {thisObj.moveTravelMarkerThroughStops()}, this.travelMarker.frame_rate, this);
+      //this.travelMarker.refitBoundsInterval = setInterval(function(thisObj) { thisObj.fitBoundsToTravelMarker() }, 50, this);
+    } else {
+      debug.log("No path points found for this");
+    }
 
     return false;
   }
-
 
   this.moveTravelMarkerThroughStops = function(current_stop_index) {
     //debug.log(current_stop_index);
@@ -372,58 +388,6 @@ function Trip(map, map_mode) {
       this.travelMarker.setMap(null);
       this.travelMarker.is_moving = false;
       //debug.log('finished');
-      return false;
-    }
-
-    this.fitBoundsToTravelMarker();
-
-    this.travelMarker.setPosition(stop);
-    this.travelMarker.current_stop_index++;
-
-    setTimeout(function(thisObj) {thisObj.moveTravelMarkerThroughStops()}, this.travelMarker.frame_rate, this);
-    
-    return true;
-  }
-
-  this.fitBoundsToTravelMarker = function() {
-    // create new bounds for map
-    // adjust the viewport of map so that we can see
-    // the current stop, the previous and next 1% of stops
-    current_stop_index = this.travelMarker.current_stop_index;
-    stops = this.travelMarker.stops;
-    prev_stop_percentage = Math.round(stops.length * 0.05);
-    stop_percentage = Math.round(stops.length * 0.40);
-    if (current_stop_index%5 == 0) {
-      previous_stops_index = Math.max(current_stop_index - prev_stop_percentage, 0);
-      previous_stops = this.travelMarker.stops.slice(previous_stops_index, current_stop_index);
-
-      next_stops_index = Math.min(current_stop_index + stop_percentage, stops.length -1);
-      next_stops = this.travelMarker.stops.slice(current_stop_index, next_stops_index);
-
-      bound_stops = [stop].concat(previous_stops).concat(next_stops);
-      bound_stops = [stop].concat(next_stops);
-
-      bounds = new google.maps.LatLngBounds();
-      $.each(bound_stops, function(i, pos) {
-        if (typeof(pos) != 'undefined' && typeof(pos.lat) == 'function') {
-          bounds.extend(pos);
-        }
-      });
-      this.fitBounds(bounds);
-    }
-  }
-
-
-  this.moveTravelMarkerThroughStops = function(current_stop_index) {
-    //console.log(current_stop_index);
-    current_stop_index = this.travelMarker.current_stop_index;
-    stop = this.travelMarker.stops[current_stop_index];
-    //console.log(typeof(stop));
-
-    if (typeof(stop) == 'undefined') {
-      this.travelMarker.setMap(null);
-      this.travelMarker.is_moving = false;
-      console.log('finished');
       return false;
     }
 

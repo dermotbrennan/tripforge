@@ -1,7 +1,6 @@
 class Event < ActiveRecord::Base
+  include Pacecar
   include ActionView::Helpers::DateHelper
-
-  default_scope order("started_at asc")
   
   belongs_to :trip
   has_many :items
@@ -14,11 +13,11 @@ class Event < ActiveRecord::Base
   validate :check_times
 
   def next_event
-    self.trip.events.where(["started_at >= ? AND id != ?", self.started_at, self.id]).first
+    self.trip.events.where(["started_at >= ? AND id != ?", self.started_at, self.id]).by_started_at(:asc).first
   end
 
   def previous_event
-    self.trip.events.where(["started_at <= ? AND id != ?", self.started_at, self.id]).first
+    self.trip.events.where(["started_at <= ? AND id != ?", self.started_at, self.id]).by_started_at(:desc).first
   end
 
   def has_gphoto?(gphoto_xml)
