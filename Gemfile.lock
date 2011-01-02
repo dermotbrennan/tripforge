@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/sferik/rails_admin.git
+  revision: 2452e8a988f0fc81c91a9ec03833d2fef9a56d12
+  specs:
+    rails_admin (0.0.1)
+      builder (~> 2.1.0)
+      rails (~> 3.0.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -160,6 +168,7 @@ DEPENDENCIES
   paperclip (>= 2.3.3)
   pg
   rails (= 3.0.3)
+  rails_admin!
   sqlite3-ruby
   truncate_html (= 0.3.2)
   will_paginate (~> 3.0.pre2)
