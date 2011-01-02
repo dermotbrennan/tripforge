@@ -1,0 +1,27 @@
+%h1 Sign In Options
+- if @authentications
+  - unless @authentications.empty?
+    %p
+      %strong You have signed in with these services:
+    #authentications.plain
+      %ul
+        - for authentication in @authentications
+          %li
+            = image_tag "#{authentication.provider}_64.png", :size => "64x64"
+            .provider
+              = authentication.provider_name
+              -#.uid= authentication.uid
+              = link_to "X", authentication, :confirm => 'Are you sure you want to remove this authentication option?', :method => :delete, :class => "remove"
+  %p
+    %strong Add another service to sign in with:
+- else
+  %p
+    %strong Sign in through one of these services:
+#authentications.plain=render :partial => 'authentications/list'
+
+- unless user_signed_in?
+  %p
+    %strong Don't use these services?
+    = link_to "Sign up", new_user_registration_path
+    or
+    \#{link_to "sign in", new_user_session_path} with a password.

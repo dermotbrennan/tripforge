@@ -11,7 +11,7 @@ gem 'gdata_19', :require => 'gdata'
 gem "oauth"
 gem "oauth-plugin"
 gem 'haml', '>= 3.0.18'
-gem 'authlogic', '>= 2.1.6'
+#gem 'authlogic', '>= 2.1.6'
 gem 'bcrypt-ruby', '>= 2.1.2', :require => 'bcrypt'
 gem 'formtastic', '>= 1.1.0'
 #gem 'rmagick', '>= 2.12.2', :require => 'RMagick'
@@ -20,6 +20,10 @@ gem 'paperclip', '>= 2.3.3'
 gem 'will_paginate', "~> 3.0.pre2"
 gem 'find_by_param'
 gem 'pacecar'
+gem 'devise'
+gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
+gem 'omniauth'
+gem 'cancan'
 
 # heroku
 group :production do

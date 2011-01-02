@@ -10,6 +10,8 @@
       'jquery.scrollfollow', 'jquery.scrollTo', 'event_list', 'event_list_item', 'event', 'event_form', 'application', 'rails'
     = csrf_meta_tag
   %body{:id => "body-#{controller_name}-#{action_name}", :class => "controller-#{controller_name}"}
+    - if flash[:error].present?
+      #flash{:class => 'error'}= flash[:error]
     #header-outer
       #header-wrapper
         #header
@@ -17,12 +19,12 @@
           #main-navbar
             %ul
               - unless current_user
-                %li= link_to 'login', login_path
-                %li= link_to 'signup', signup_path
+                %li= link_to 'sign in', new_user_session_path
+                %li= link_to 'create account', new_user_registration_path
               - else
                 %li= link_to 'my trips', trips_path
-                %li= link_to 'settings', '#'
-                %li= link_to 'logout', logout_path
+                %li= link_to 'settings', edit_user_registration_path
+                %li= link_to 'logout', destroy_user_session_path
 
     #wrapper
       #main-content

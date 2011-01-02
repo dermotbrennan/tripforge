@@ -1,3 +1,3 @@
 class TransportMode < ActiveRecord::Base
-  has_many :scenes
+  has_many :events
 end

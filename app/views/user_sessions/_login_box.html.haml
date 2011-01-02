@@ -1,5 +1,0 @@
-= form_for UserSession.new, :url => login_path do |f|
-  %div
-    %span= f.text_field :login, :size => 16, :class => 'text-hint', :title => 'Username'
-    %span= f.password_field :password, :size => 16, :class => 'text-hint', :title => 'Password'
-    %span= submit_tag 'Login'

@@ -1,13 +1,16 @@
 Tripmap::Application.routes.draw do
-
+  match '/auth/:provider/callback' => 'authentications#create'
+  devise_for :users, :controllers => {:registrations => 'registrations'}
+  
   resources :transport_modes
 
-  resources :providers do
-    member do
-      get 'connect'
-      get 'connect_callback'
-    end
-  end
+  resources :authentications
+#  resources :providers do
+#    member do
+#      get 'connect'
+#      get 'connect_callback'
+#    end
+#  end
 
   resources :items
   resources :events
@@ -80,17 +83,6 @@ Tripmap::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   root :to => "welcome#index"
-
-  post '/signup' => 'account#create', :as => :signup
-  get '/signup' => 'account#new', :as => :signup
-  match '/account' => 'account#show', :as => :account
-  match '/account/edit' => 'account#edit', :as => :edit_account
-  post '/login' => 'user_sessions#create', :as => :login
-  get '/login' => 'user_sessions#new', :as => :login
-  match '/logout' => 'user_sessions#destroy', :as => :logout
-  match '/forgot_password' => 'password_resets#new', :as => :forgot_password
-  match '/reset_password/:id' => 'password_resets#edit', :as => :reset_password
-  resources :password_resets
 
   # See how all your routes lay out with "rake routes"
 

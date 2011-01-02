@@ -10,7 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101014174137) do
+ActiveRecord::Schema.define(:version => 20110102103546) do
+
+  create_table "authentications", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "provider"
+    t.string   "uid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "authentications", ["provider"], :name => "index_authentications_on_provider"
+  add_index "authentications", ["uid"], :name => "index_authentications_on_uid"
+  add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
 
   create_table "credentials", :force => true do |t|
     t.integer  "provider_id"
@@ -29,9 +41,6 @@ ActiveRecord::Schema.define(:version => 20101014174137) do
     t.string   "event_type"
     t.string   "name"
     t.text     "description"
-    t.string   "location"
-    t.integer  "previous_event_id"
-    t.integer  "next_event_id"
     t.integer  "transport_mode_id"
     t.decimal  "longitude"
     t.decimal  "latitude"
@@ -42,12 +51,18 @@ ActiveRecord::Schema.define(:version => 20101014174137) do
     t.datetime "updated_at"
   end
 
-  add_index "events", ["ended_at"], :name => "index_events_on_ended_at"
-  add_index "events", ["event_type"], :name => "index_events_on_event_type"
-  add_index "events", ["name"], :name => "index_events_on_name"
-  add_index "events", ["rating"], :name => "index_events_on_rating"
-  add_index "events", ["started_at"], :name => "index_events_on_started_at"
-  add_index "events", ["trip_id"], :name => "index_events_on_trip_id"
+  create_table "histories", :force => true do |t|
+    t.string   "message"
+    t.string   "username"
+    t.integer  "item"
+    t.string   "table"
+    t.integer  "month",      :limit => 2
+    t.integer  "year",       :limit => 5
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "histories", ["item", "table", "month", "year"], :name => "index_histories_on_item_and_table_and_month_and_year"
 
   create_table "items", :force => true do |t|
     t.integer  "event_id",          :null => false
@@ -107,34 +122,36 @@ ActiveRecord::Schema.define(:version => 20101014174137) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_public"
   end
 
   add_index "trips", ["created_at"], :name => "index_trips_on_created_at"
+  add_index "trips", ["is_public"], :name => "index_trips_on_is_public"
   add_index "trips", ["name"], :name => "index_trips_on_name"
   add_index "trips", ["updated_at"], :name => "index_trips_on_updated_at"
   add_index "trips", ["user_id"], :name => "index_trips_on_user_id"
 
   create_table "users", :force => true do |t|
+    t.string   "email",                               :default => "",     :null => false
+    t.string   "encrypted_password",   :limit => 128, :default => "",     :null => false
+    t.string   "password_salt",                       :default => "",     :null => false
+    t.string   "reset_password_token"
+    t.string   "remember_token"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",                       :default => 0
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "role",                                :default => "user", :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "login",                                 :null => false
-    t.string   "email"
-    t.string   "crypted_password",                      :null => false
-    t.string   "password_salt",                         :null => false
-    t.string   "persistence_token",                     :null => false
-    t.string   "perishable_token"
-    t.integer  "login_count",       :default => 0,      :null => false
-    t.datetime "last_request_at"
-    t.datetime "last_login_at"
-    t.datetime "current_login_at"
-    t.string   "last_login_ip"
-    t.string   "current_login_ip"
-    t.string   "role",              :default => "user", :null => false
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
-  add_index "users", ["email"], :name => "index_users_on_email"
-  add_index "users", ["last_request_at"], :name => "index_users_on_last_request_at"
-  add_index "users", ["login"], :name => "index_users_on_login"
-  add_index "users", ["persistence_token"], :name => "index_users_on_persistence_token"
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["role"], :name => "index_users_on_role"
 
 end

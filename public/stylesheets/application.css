@@ -101,19 +101,99 @@ form li textarea {
 }
 
 form input[type=submit] {
-  color: #fff;
-  background-color: #eb6929;
+  color: #efefef;
   cursor: pointer;
   font-weight: bold;
   font-size: 18px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  box-shadow: 0px 0px 5px #000;
-  -moz-box-shadow: 0px 0px 5px #000;
-  -webkit-box-shadow: 0px 0px 5px #000;
+  padding-bottom: 2px;
+  border: 1px solid #cdcdcd;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgba(0,0,0, 0.2)), color-stop(0.6, rgba(255,255,255,0.2)), color-stop(0.7, rgba(255,255,255, 0.32)), color-stop(1, rgba(255,255,255, 0.2)));
+  background: -moz-linear-gradient(center bottom, rgba(0,0,0,0.2) 0%, rgba(255,255,255,0.2) 60%, rgba(255,255,255, 0.32) 70%, rgba(255,255,255,0.2) 100%);
+  background-color: #eb6929;
 }
 
+form input[type=submit]:hover {
+  background: -webkit-gradient(linear, left bottom, left top, color-stop(0, rgba(255,255,255, 0.2)), color-stop(0.6, rgba(255,255,255, 0.32)), color-stop(0.7, rgba(255,255,255,0.2)) color-stop(1, rgba(0,0,0, 0.2)));
+  background: -moz-linear-gradient(center bottom, rgba(255,255,255,0.2) 0%, rgba(255,255,255, 0.32) 60%, rgba(255,255,255,0.2) 70%, rgba(0,0,0,0.2) 100%);
+  background-color: #eb6929;
+}
+
+/* devise forms used in signup and sign in */
+form.devise_form {
+  margin-top: 20px;
+}
+
+form.devise_form p.field {
+  margin-bottom: 10px;
+}
+
+form.devise_form label {
+  color: #000;
+}
+
+form.devise_form input[type=text], form.devise_form input[type=email], form.devise_form input[type=password] {
+  width: 100%;
+  color: #222;
+  line-height: 140%;
+  font-size: 16px;
+}
+
+form.devise_form input[type=text]:focus, form.devise_form input[type=email]:focus, form.devise_form input[type=password]:focus {
+  background: #f8e9e1;
+}
+
+/* form errors */
+#errorExplanation, #error_explanation {
+  background-color: #ffbdbd;
+  border: 1px solid #fe0000;
+  padding: 10px;
+  color: #333;
+}
+
+#errorExplanation h2, #error_explanation h2 {
+  color: #ff121d;
+  font-size: 16px;
+  margin: 0px;
+}
+
+#errorExplanation li, #error_explanation li {
+  margin: 2px 0px 2px 20px;
+  list-style-type: disc;
+}
+
+form li.error input, form .field_with_errors input {
+  border: 1px solid #fe0000;
+}
+form li.error p.inline-errors {
+  color: #ff121d;
+}
+
+/* flash style */
+#flash {
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  top: 0px;
+  margin-left: -170px;
+  width: 300px;
+  padding: 5px 10px;
+  text-align: center;
+  border: 1px solid #fff;
+  border-top: none;
+  background: #cd0000;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 18px;
+}
 
 /* outer container styles */
 #header-wrapper, #wrapper {
@@ -233,21 +313,34 @@ form input[type=submit] {
   text-decoration: none;
 }
 
-/* other stuff */
-#none_found {
-  font-size: 28px;
-  text-align: center;
-  color: #efefef;
-  width: 60%;
-  margin: 40px auto;
-  padding: 10px 0px;
-  background-color: #eb6929;
-  border: 1px outset #e66323;
-  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;
+/* authentications */
+#authentications {
+  float: right;
+  padding: 7px 20px 20px;
+  border-left: 1px solid #333;
+  width: 500px;
+  min-height: 300px;
+  font-weight: bold;
 }
 
-#none_found a {
-  color: #efefef;
+#authentications.plain {
+  float: none;
+  border: none; 
+  min-height: 0px;
+  overflow: hidden;
+}
+
+#authentications ul li {
+  float: left;
+  margin: 0px 8px 8px;
+  text-align: center;
+}
+
+#authentications ul li a {
+  text-decoration: none;
+  font-weight: bold;
+  display: block;
+  text-align: center;
 }
 
 /* trips index */

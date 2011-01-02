@@ -1,12 +1,13 @@
 class TripsController < ApplicationController
-  before_filter :require_user
+  before_filter :authenticate_user!
+  load_and_authorize_resource :only => [:index]
   
   def new
     @trip = Trip.new
   end
 
   def index
-    @trips = Trip.all
+    #@trips = Trip.all
   end
 
   def edit
@@ -34,6 +35,7 @@ class TripsController < ApplicationController
 
   def show
     @trip = Trip.find(params[:id])
+    authorize! :show, @trip
   end
 
   def play

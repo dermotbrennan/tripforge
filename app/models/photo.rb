@@ -18,7 +18,7 @@ class Photo < Item
   end
 
   class << self
-    def from_gphoto_feed(xml, scene, gphoto_ids)
+    def from_gphoto_feed(xml, event, gphoto_ids)
       return false unless gphoto_ids && !gphoto_ids.empty?
 
       imported_gphoto_ids = []
@@ -45,7 +45,7 @@ class Photo < Item
 
           Rails.logger.debug photo_urls_attributes.inspect
 
-          if Photo.create(:scene => scene,
+          if Photo.create(:event => event,
               :source => 'picasaweb',
               :source_id => gphoto_id,
               :title => photo.elements['media:group/media:title'].text,
