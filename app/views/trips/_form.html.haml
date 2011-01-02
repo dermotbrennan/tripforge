@@ -4,4 +4,5 @@
     %ul
       = f.input :name
       = f.input :description, :as => :text
+      = f.input :is_public, :as => :boolean, :label => "Trip is public and visible to everyone"
       = f.commit_button f.object.new_record? ? 'Create Trip' : 'Update Trip', :button_html => { :id => nil }
