@@ -81,6 +81,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
 
   // position marker
   event.find('.marker').draggable({
+    scope: 'location',
     revert: 'invalid',
     start: function(e, ui) {
       // modify map to make it take a new marker
@@ -89,6 +90,25 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
     stop: function(e, ui) {
       //if (typeof(ui.map_drag_listener) != 'undefined')
       //  google.maps.event.removeListener(ui.map_drag_listener);
+    }
+  });
+
+  // make it so that you can drop items onto the event
+  event.droppable({
+    scope: 'photos',
+    hoverClass: 'drophover',
+    drop: function( e, ui ) {
+      item_id = ui.draggable[0].id.replace(/photo_/, '');
+
+
+
+      event_id = cleanEventId($(e.target).parent().parent().attr('id'));
+
+      // check if item_id already in the list of items
+      // if it is then highlight item
+      // if it is not then add it to the end of the list
+      // create a new item in the db
+      // TODO handle multiple drags
     }
   });
 }

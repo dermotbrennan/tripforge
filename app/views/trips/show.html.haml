@@ -8,14 +8,20 @@
       = nl2br(@trip.description)
     - else
       No description.
+    %p#edit_trip_link== [#{link_to 'edit', edit_trip_path(@trip)}]
 
   #trip_actions
     = link_to 'PLAY', {:action => 'play'}, :id => 'play_trip_button', :class => 'trip_button'
     = link_to 'SHARE', {:action => 'share'}, :id => 'share_trip_button', :class => 'trip_button'
 
-= render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :trip_overview}
+#tool_tabs
+  %ul#tool_tabs_list 
+    %li= link_to 'Map', '#map_tool'
+    %li= link_to 'Photos', '#photos_tool'
+  #photos_tool.tool_tab_content= render :partial => 'items/import_photos', :locals => {:providers => @providers, :selected_provider => @selected_provider}
+  #map_tool.tool_tab_content= render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :trip_overview}
 %ul#events
-  - unless @trip.events.empty?
+  - if @trip.events.present?
     = render :partial => 'events/event', :collection => @trip.events
 
 #new_event_wrapper

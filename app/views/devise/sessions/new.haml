@@ -2,7 +2,7 @@
 
 #authentications
   %h3 Sign in using these services
-  = render :partial => 'authentications/list'
+  = render_cell :providers, :list
 
 = form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => 'devise_form'}) do |f|
   %p.field

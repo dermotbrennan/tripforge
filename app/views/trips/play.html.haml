@@ -4,22 +4,24 @@
 
 = render :partial => 'trips/map', :locals => {:trip => @trip, :mode => :play_trip}
 
-#event_info_container= render :partial => 'events/info', :locals => {:event => first_event}
+- if first_event
+  #event_info_container= render :partial => 'events/info', :locals => {:event => first_event}
 
-- events.each do |event|
-  - class_name = first_event == event ? 'active' : ''
-  .map_navigation{:id => "map-navigation-#{event.id}", :class => class_name}
-    .prev_event.event_nav_button
-      - if event.previous_event
-        .event_id= event.previous_event.id
-        = link_to '', '#', :class => 'prev_arrow arrow'
-        = link_to event.previous_event.name, '#', :class => 'name ellipsis'
-    .current_event
-      %h2.ellipsis= link_to event.name, '#'
-      %p.current_event_id= event.id
-      %p.time= event.started_at
-    .next_event.event_nav_button
-      - if event.next_event
-        .event_id= event.next_event.id
-        = link_to event.next_event.name, '#', :class => 'name ellipsis'
-        = link_to '', '#', :class => 'next_arrow arrow'
+- if events.present?
+  - events.each do |event|
+    - class_name = first_event == event ? 'active' : ''
+    .map_navigation{:id => "map-navigation-#{event.id}", :class => class_name}
+      .prev_event.event_nav_button
+        - if event.previous_event
+          .event_id= event.previous_event.id
+          = link_to '', '#', :class => 'prev_arrow arrow'
+          = link_to event.previous_event.name, '#', :class => 'name ellipsis'
+      .current_event
+        %h2.ellipsis= link_to event.name, '#'
+        %p.current_event_id= event.id
+        %p.time= event.started_at
+      .next_event.event_nav_button
+        - if event.next_event
+          .event_id= event.next_event.id
+          = link_to event.next_event.name, '#', :class => 'name ellipsis'
+          = link_to '', '#', :class => 'next_arrow arrow'

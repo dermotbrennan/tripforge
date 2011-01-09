@@ -1,16 +1,19 @@
 class AuthenticationsController < ApplicationController
   def index
+    @providers = Provider.with_auth
     @authentications = current_user.authentications if current_user
   end
   
   def create
     omniauth = request.env["omniauth.auth"]
-    authentication = Authentication.find_by_provider_and_uid(omniauth['provider'], omniauth['uid'])
+    provider = Provider.find_by_code(omniauth['provider'])
+    raise "No such provider #{omniauth['provider']}" unless provider
+    authentication = Authentication.find_by_provider_id_and_uid(provider.id, omniauth['uid'])
     if authentication
       flash[:notice] = "Signed in successfully."
       sign_in_and_redirect(:user, authentication.user)
     elsif current_user
-      current_user.authentications.create!(:provider => omniauth['provider'], :uid => omniauth['uid'])
+      current_user.authentications.create!(:provider_id => provider.id, :uid => omniauth['uid'])
       flash[:notice] = "Authentication successful."
       redirect_to authentications_url
     else

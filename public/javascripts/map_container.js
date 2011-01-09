@@ -5,12 +5,6 @@ function MapContainer(jquery_obj, map_mode) {
   if (this.map_mode == MapMode.PLAY_TRIP) {
     $('body').prepend($("#map, .map_navigation, #event_info_container"));
     this.element.height($(document).height() - 64);
-  } else if (this.map_mode == MapMode.TRIP_OVERVIEW) {
-    this.element.scrollFollow( {
-      speed: 800,
-      offset: 60,
-      container: 'main-content-inner'
-    });
   }
 
   this.init_map = function() {
@@ -29,6 +23,7 @@ function MapContainer(jquery_obj, map_mode) {
     map_el = this.element;
     map = this.map;
     map_el.droppable({
+      scope: 'location',
       hoverClass: 'drophover',
       drop: function( e, ui ) {
         marker_id = ui.draggable[0].id;

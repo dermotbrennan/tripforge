@@ -1,0 +1,13 @@
+%h2
+  = link_to 'All Albums', "#all_albums_#{@provider.code}", :class => 'back_to_all_albums'
+  &gt;
+  = @album_title
+
+%ul.photos
+  - @photos.to_a('entry').in_groups_of(per_row = 4, false) do |group|
+    - group.each_with_index do |photo, i|
+      - class_name = (i == 0 ? 'clear' : '')
+      %li.photo{:class => class_name, :id => "photo_#{photo.elements['gphoto:id'].text}"}
+        .provider.hide= @provider.code
+        .image= image_tag photo.elements['media:group/media:thumbnail'].attribute('url').value
+        %p= photo.elements['media:group/media:title'].text

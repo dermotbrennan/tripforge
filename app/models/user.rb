@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_many :authentications
+  has_many :credentials
 
   # Include default devise modules. Others available are:
   # :token_authenticatable, :confirmable, :lockable and :timeoutable
@@ -14,7 +15,8 @@ class User < ActiveRecord::Base
     self.email = omniauth['user_info']['email'] if email.blank?
     self.first_name = omniauth['user_info']['first_name'] if first_name.blank?
     self.last_name = omniauth['user_info']['last_name'] if last_name.blank?
-    authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+    provider = Provider.find_by_code(omniauth['provider'])
+    authentications.build(:provider_id => provider.id, :uid => omniauth['uid'])
   end
 
   def password_required?
@@ -23,5 +25,13 @@ class User < ActiveRecord::Base
   
   def is_admin?
     role == 'admin'
+  end
+
+  def credential_for(provider)
+    self.credentials.where(:provider_id => provider.id).first
+  end
+
+  def has_credential_for?(provider)
+    !!credential_for(provider)
   end
 end

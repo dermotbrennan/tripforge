@@ -1,0 +1,11 @@
+- if @providers.present?
+  %ul
+    - @providers.each_with_index do |provider, i|
+      %li
+        %a.auth_provider{:href => "/auth/#{provider.code}"}
+          = image_tag "#{provider.code}_#{@image_size}.png", :size => "#{@image_size}x#{@image_size}", :alt => "#{provider.name}"
+          %br/
+          %span.provider_name
+            = provider.name
+            - if @authentications && (authentication = @authentications[i])
+              = link_to "X", authentication, :confirm => 'Are you sure you want to remove this authentication option?', :method => :delete, :class => "remove"

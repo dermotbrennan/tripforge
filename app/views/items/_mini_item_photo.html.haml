@@ -1,0 +1,5 @@
+- if photo.thumbnail_url
+  = link_to photo.large_url do
+    = image_tag photo.thumbnail_url
+- else
+  no thumbnail available.

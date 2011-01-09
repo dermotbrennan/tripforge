@@ -1,8 +1,9 @@
 %h2 Sign up to TripForge
 
-#authentications
-  %h3 Sign up using these services
-  = render :partial => 'authentications/list'
+- if @user.authentications.blank?
+  #authentications
+    %h3 Sign up using these services
+    = render_cell :providers, :list
 
 = form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:class => 'devise_form'}) do |f|
   = devise_error_messages!

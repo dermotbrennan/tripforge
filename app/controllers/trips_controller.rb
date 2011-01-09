@@ -7,16 +7,18 @@ class TripsController < ApplicationController
   end
 
   def index
-    #@trips = Trip.all
   end
 
   def edit
     @trip = Trip.find(params[:id])
+    authorize! :update, @trip
   end
 
   def update
     @trip = Trip.find(params[:id])
+    authorize! :update, @trip
     @trip.update_attributes(params[:trip])
+    @trip.user = current_user unless current_user.is_admin?
     if @trip.save
       redirect_to @trip
     else
@@ -26,6 +28,7 @@ class TripsController < ApplicationController
 
   def create
     @trip = Trip.new(params[:trip])
+    @trip.user = current_user
     if @trip.save
       redirect_to @trip
     else
@@ -36,9 +39,13 @@ class TripsController < ApplicationController
   def show
     @trip = Trip.find(params[:id])
     authorize! :show, @trip
+    @providers = Provider.with_photos
+    @providers = @providers.partition { |p| current_user.has_credential_for?(p) }.flatten
+    @selected_provider = @providers.first
   end
 
   def play
     @trip = Trip.find(params[:id])
+    authorize! :show, @trip
   end
 end

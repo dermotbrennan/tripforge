@@ -9,6 +9,14 @@
       = f.input :ended_at, :as => :string, :label => false, :input_html => {:class => 'datetime_picker', :id => "event-#{f.object.id}-ended_at", :value => f.object.ended_at.to_s}, :wrapper_html => {:class => "datetime_picker"}
       - unless f.object.trip.events.empty?
         = f.input :transport_mode, :label => "Got here by...", :include_blank => false
+  %fieldset.media
+    %ul
+      - if event.items.present?
+        %li
+          %ul= render :partial => 'items/mini_item', :collection => event.items
+      %li
+        - unless event.new_record?
+          %h3= link_to 'Add Photos', '#'
   .event_form_buttons
     - if f.object.new_record?
       == #{link_to 'save', '#', :id => 'create_event_button'}

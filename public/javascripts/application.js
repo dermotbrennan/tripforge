@@ -1,4 +1,10 @@
 $(document).ready(function() {
+  tool_tabs = $('#tool_tabs');
+  if (tool_tabs.length > 0) {
+    tool_tabs.tabs();
+    $('#photos_tool').tabs();
+  }
+  
   map_el = $('#map');
   if (map_el.length > 0) {
     map_mode = $('#map_mode').text();
@@ -31,4 +37,10 @@ $(document).ready(function() {
     new_event_wrapper_form.event_formify();
     new_event_wrapper_form.initForm();
   }
+
+  $('#tool_tabs').scrollFollow( {
+      speed: 800,
+      offset: 60,
+      container: 'main-content-inner'
+    });
 });

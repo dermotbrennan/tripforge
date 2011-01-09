@@ -1,0 +1,17 @@
+= semantic_form_for(@item, :html => {:multipart => true}) do |f|
+  = error_messages_for :item
+  %fieldset
+    %ul
+      = f.input :scene_id, :as => :hidden
+      = f.input :type
+      = f.input :source_url
+      = f.input :author
+      = f.input :title
+      = f.input :content, :as => :text
+      = f.input :longitude
+      = f.input :latitude
+      = f.input :device
+      = f.input :source_created_at
+      = f.input :rating
+      = f.input :asset, :as => :file
+      = f.commit_button f.object.new_record? ? 'Add Item' : 'Update Item', :button_html => { :id => nil }

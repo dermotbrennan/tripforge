@@ -5,12 +5,13 @@ Tripmap::Application.routes.draw do
   resources :transport_modes
 
   resources :authentications
-#  resources :providers do
-#    member do
-#      get 'connect'
-#      get 'connect_callback'
-#    end
-#  end
+  resources :providers do
+    member do
+      get 'connect'
+      get 'connect_callback'
+      get 'album/:album_id', :action => 'album'
+    end
+  end
 
   resources :items
   resources :events

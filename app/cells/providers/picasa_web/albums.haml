@@ -1,0 +1,3 @@
+%ul#picasa_web_albums.photo_albums
+  - @albums.each('entry') do |album|
+    = render :partial => 'providers/picasa_web/album', :object => album

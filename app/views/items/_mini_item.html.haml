@@ -1,0 +1,2 @@
+- type = mini_item.type.downcase
+%li{:class => type+'_item'}= render :partial => 'items/mini_item_'+type, :locals => {type.to_sym => mini_item}

@@ -24,6 +24,7 @@ gem 'devise'
 gem 'rails_admin', :git => 'git://github.com/sferik/rails_admin.git'
 gem 'omniauth'
 gem 'cancan'
+gem 'cells'
 
 # heroku
 group :production do

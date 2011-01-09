@@ -10,17 +10,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110102103546) do
+ActiveRecord::Schema.define(:version => 20110104194912) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
-    t.string   "provider"
     t.string   "uid"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "access_token"
+    t.integer  "provider_id"
   end
 
-  add_index "authentications", ["provider"], :name => "index_authentications_on_provider"
+  add_index "authentications", ["provider_id"], :name => "index_authentications_on_provider_id"
   add_index "authentications", ["uid"], :name => "index_authentications_on_uid"
   add_index "authentications", ["user_id"], :name => "index_authentications_on_user_id"
 
@@ -104,11 +105,16 @@ ActiveRecord::Schema.define(:version => 20110102103546) do
   add_index "photo_urls", ["width"], :name => "index_photo_urls_on_width"
 
   create_table "providers", :force => true do |t|
-    t.string "name"
-    t.string "code"
-    t.string "consumer_token"
-    t.string "consumer_secret"
+    t.string  "name"
+    t.string  "code"
+    t.string  "consumer_token"
+    t.string  "consumer_secret"
+    t.boolean "has_auth",        :default => false, :null => false
+    t.boolean "has_photos",      :default => false, :null => false
   end
+
+  add_index "providers", ["has_auth"], :name => "index_providers_on_has_auth"
+  add_index "providers", ["has_photos"], :name => "index_providers_on_has_photos"
 
   create_table "transport_modes", :force => true do |t|
     t.string "name"
