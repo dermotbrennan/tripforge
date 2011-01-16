@@ -21,7 +21,7 @@ class Ability
         event && (event.trip.user == user || event.trip.is_public?)
       end
 
-      can [:update, :destroy], Event do |event|
+      can [:create, :update, :destroy], Event do |event|
         event && event.trip.user == user
       end
 
@@ -30,7 +30,7 @@ class Ability
         item && (trip.user == user || trip.is_public?)
       end
 
-      can [:update, :destroy], Item do |item|
+      can [:create, :update, :destroy], Item do |item|
         item && item.event.trip.user == user
       end
     end

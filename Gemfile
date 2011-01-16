@@ -9,7 +9,8 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 
 gem 'gdata_19', :require => 'gdata'
 gem "oauth"
-gem "oauth-plugin"
+gem "oauth2"
+#gem "oauth-plugin"
 gem 'haml', '>= 3.0.18'
 #gem 'authlogic', '>= 2.1.6'
 gem 'bcrypt-ruby', '>= 2.1.2', :require => 'bcrypt'

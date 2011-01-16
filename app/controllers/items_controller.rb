@@ -1,31 +1,42 @@
 class ItemsController < ApplicationController
   before_filter :authenticate_user!
   
-  def new
-    @event = Event.find(params[:event_id])
-    @item = Item.new(:event => @event)
-  end
-
-  def index
-    @items = Item.all
-  end
-
   def create
+    type = params[:item].delete(:type) if params[:item] && params[:item][:type]
     @item = Item.new(params[:item])
+    @item.type = type
+    authorize! :create, @item
     if @item.save
-      redirect_to event_item_path(@item, :event_id => @item.event.id), :success => "Item created successfully"
+      if request.xhr?
+        if @item.type == 'Photo'
+          photo = Photo.find(@item.id)
+          render :partial => 'items/mini_item', :locals => {:mini_item => photo}
+        end
+      else
+        redirect_to item_path(@item), :success => "Item created successfully"
+      end
     else
-      render :action => :new
+      if request.xhr?
+        head :bad_request
+      else
+        render :action => :new
+      end
     end
-  end
-
-  def show
-    @item = Item.find(params[:id])
   end
 
   def destroy
     @item = Item.find(params[:id])
-    redirect_to @item.story, :success => "Item deleted"
-    @item.destroy
+    authorize! :destroy, @item
+    if @item.destroy
+      if request.xhr?
+        head :ok
+      else
+        redirect_to @item.event.trip, :success => "Item deleted"
+      end
+    else
+      if request.xhr?
+        head :bad_request
+      end
+    end
   end
 end

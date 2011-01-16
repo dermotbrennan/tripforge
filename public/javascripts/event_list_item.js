@@ -98,17 +98,59 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
     scope: 'photos',
     hoverClass: 'drophover',
     drop: function( e, ui ) {
-      item_id = ui.draggable[0].id.replace(/photo_/, '');
+      var target_event = $(e.target);
+      var provider_id = ui.draggable.find('.provider_id').text();
+      var album_id = ui.draggable.find('.album_id').text();
+      var source_id = ui.draggable.attr('id').replace(/photo_/, '');
+      var source_url = ui.draggable.find('.source_url').text();
+      var source_created_at = ui.draggable.find('.source_created_at').text();
+      var title = ui.draggable.find('.title').text();
+      var event_id = cleanEventId(target_event.attr('id'));
+      //debug.log(album_id, event_id, source_id, provider_id );
 
-
-
-      event_id = cleanEventId($(e.target).parent().parent().attr('id'));
+      item_el_id = 'item_'+source_id;
+      item_in_event_el = target_event.find('#'+item_el_id);
 
       // check if item_id already in the list of items
-      // if it is then highlight item
-      // if it is not then add it to the end of the list
-      // create a new item in the db
+      if (item_in_event_el.length > 0) {
+        // if it is then highlight item
+        item_in_event_el.highlight();
+      } else {
+        // if it is not then add it to the end of the list
+        items_list = target_event.find('.items ul');
+        items_list.append("<li id='" + item_el_id + "' class='photo_item ajax_loading'></li>");
+        item_in_event_el = target_event.find('#'+item_el_id);
+        debug.log(item_in_event_el.length);
+
+        // create a new item in the db
+        item = new Item();
+        item.setAttributes({event_id: event_id, type: 'Photo', title: title, provider_id: provider_id, source_id: source_id,
+          album_id: album_id, source_url: source_url, source_created_at: source_created_at});
+
+        item.save({success: function(objResponse) {
+            item_in_event_el.replaceWith(objResponse);
+          },
+          error: function( objRequest ){
+            alert('error');
+          },
+          complete: function( objRequest ){
+          }}
+        );
+      }
       // TODO handle multiple drags
     }
+  });
+
+  // remove an item from an event
+  event.find('a.remove_item_from_event').live('click', function() {
+    item_el = $(this).parents('li.item');
+    item_id = item_el.find('.item_id').text();
+    item_el.hide();
+    item = new Item(item_id);
+    item.destroy({
+      success: function(objResponse) { item_el.remove(); },
+      error: function(objResponse) { item_el.show(); }
+    });
+    return false;
   });
 }

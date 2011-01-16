@@ -5,6 +5,10 @@ class Photo < Item
 
   MAX_LARGE_PHOTO_WIDTH = 600
 
+  def image_url(width)
+    self.source_url.gsub(/([^\/]+)$/, "s#{width}/\\1") if self.source_url.present?
+  end
+
   def original_url
     photo_urls.order('width desc').first.url if !photo_urls.empty?
   end

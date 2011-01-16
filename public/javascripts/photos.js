@@ -14,9 +14,12 @@ $(document).ready(function() {
           album.show();
           all_albums.hide();
         } else {
-          all_albums.after("<div id='"+album_el_id+"' class='"+provider_code+"_album album'></div>")
+          all_albums.hide();
+          all_albums.after("<div id='"+album_el_id+"' class='"+provider_code+"_album album ajax_loading'></div>")
           album = $('#'+album_el_id);
           album.load('/providers/'+provider_code+'/album/'+album_id, function(data) {
+            album.show();
+            album.removeClass('ajax_loading');
             //album.find('ul.photos').selectable(); // make selectable so that user can choose which to import
             album.find('li.photo').draggable({
               scope: 'photos',
@@ -31,8 +34,6 @@ $(document).ready(function() {
                 ui.helper.prevObject.css({visibility: 'visible'});
               }
             });
-            album.show();
-            all_albums.hide();
           });
         }
       } else {

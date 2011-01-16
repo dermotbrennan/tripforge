@@ -499,7 +499,7 @@ ul#events>li .handle {
   cursor: move;
 }
 
-ul#events>li .ajax_loading, #new_event_wrapper.reloading .ajax_loading {
+ul#events>li .ajax_loading, #new_event_wrapper.reloading .ajax_loading, .ajax_loading {
   background: transparent url(/images/ajax-loader.gif) center center no-repeat;
   position: absolute;
   top: 0px;
@@ -517,7 +517,7 @@ ul#events>li.reloading, #new_event_wrapper.reloading {
   opacity: 0.4;
 }
 
-ul#events>li:hover, ul#events>li:active, #new_event_wrapper:hover {
+ul#events>li:hover, ul#events>li:active, #new_event_wrapper:hover, ul#events>li.drophover {
   border-color: #eb6929;
 }
 
@@ -602,6 +602,33 @@ form.event #event_transport_mode_input select {
   float: left;
 }
 
+/* items within events */
+.items {
+  overflow: hidden;
+  margin: 6px 0px;
+  padding: 6px 0px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.items li.photo_item {
+  float: left;
+  margin: 3px;
+  font-size: 10px;
+  text-align: center;
+}
+
+ul#events .items li.photo_item.ajax_loading {
+  display: block;
+  position: static;
+  width: 60px;
+  height: 60px;
+}
+
+li.photo_item p {
+  margin-top: 0px;
+}
+
 /* tool tabs */
 #tool_tabs {
   width: 480px;
@@ -667,6 +694,13 @@ ul#photo_providers_tabs li a:hover, ul#photo_providers_tabs li.ui-state-active a
   margin-left: 3px;
 }
 
+.album.ajax_loading {
+  top: 40px;
+  display: block;
+  height: 400px;
+  width: 450px;
+}
+
 /* anytime datepicker overrides */
 .AnyTime-win {
   z-index: 3000;
@@ -714,8 +748,16 @@ body#body-trips-play #event_info_container {
   -moz-box-shadow: 0px 0px 5px #000;
   -webkit-box-shadow: 0px 0px 5px #000;
   position: absolute;
-  right: 30px;
+  left: 50%;
+  margin-left: -185px;
   top: 200px;
+  overflow: scroll;
+  padding: 10px;
+  text-align: left;
+}
+
+body#body-trips-play #event_info_container h2 {
+  cursor: move;
 }
 
 body#body-trips-play .map_navigation {
@@ -841,7 +883,7 @@ li.photo {
   border: 2px solid transparent;
   padding: 8px 10px;
   text-align: center;
-  cursor: hand;
+  cursor: pointer;
 }
 
 ul.photos li.photo.ui-selected, ul.photos li.photo:hover,
@@ -858,7 +900,7 @@ ul.photos li.photo.ui-draggable-dragging {
 }
 
 /* flash */
-#flash-notice, #flash-error, #flash-success { padding: 3px 10px; font-weight: bold; text-align: center; }
+#flash-notice, #flash-alert, #flash-error, #flash-success { padding: 3px 10px; font-weight: bold; text-align: center; }
 #flash-notice { color: black; background-color: #fff1a8; }
-#flash-error { color: white; background-color: #cc0000; }
+#flash-error, #flash-alert { color: white; background-color: #cc0000; }
 #flash-success { color: black; background-color: #e6efc2; }

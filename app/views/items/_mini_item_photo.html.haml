@@ -1,5 +1,9 @@
-- if photo.thumbnail_url
-  = link_to photo.large_url do
-    = image_tag photo.thumbnail_url
+- if (image_url = photo.image_url(50)).present?
+  - large_image_url = photo.image_url(400)
+  = link_to large_image_url do
+    = image_tag image_url
+  %p
+    = photo.title
+    = render :partial => 'items/remove_item_from_event', :locals => {:item => photo}
 - else
-  no thumbnail available.
+  no thumbnail

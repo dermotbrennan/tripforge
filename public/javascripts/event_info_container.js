@@ -2,6 +2,9 @@ function EventInfoContainer(selector, trip) {
   this.el = $(selector);
   if (this.el.length == 0) debug.log('No valid event info container element!');
 
+  // make it draggable
+  this.el.draggable({handle: 'h2'});
+
   trip.event_info_container = this;
 
   return this;

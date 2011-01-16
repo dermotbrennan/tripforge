@@ -30,6 +30,34 @@ class ProvidersController < ApplicationController
   end
 
   private
+  def connect_facebook
+    client = OAuth2::Client.new(FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, :site => 'https://graph.facebook.com')
+    next_url = url_for(:action => "connect_callback", :id => @provider, :only_path => false)
+
+    redirect_to client.web_server.authorize_url(
+        :redirect_uri => next_url,
+        :scope => 'email,offline_access,user_photos,user_videos,publish_stream'
+      )
+  end
+
+  def connect_callback_facebook
+    begin
+      client = OAuth2::Client.new(FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, :site => 'https://graph.facebook.com')
+      next_url = url_for(:action => "connect_callback", :id => @provider, :only_path => false)
+      access_token = client.web_server.get_access_token(params[:code], :redirect_uri => next_url)
+      #user = JSON.parse(access_token.get('/me'))
+      unless (credential = current_user.credential_for(@provider))
+        credential = current_user.credentials.build(:provider_id => @provider.id, :access_token => access_token.token)
+        credential.save
+      else
+        credential.update_attribute(:access_token, access_token)
+      end
+    rescue
+      logger.debug $!
+      return false
+    end
+  end
+
   def connect_picasa_web
     client = GData::Client::Photos.new
     next_url = url_for(:action => "connect_callback", :id => @provider, :only_path => false)

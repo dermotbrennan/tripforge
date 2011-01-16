@@ -1,0 +1,3 @@
+%ul.photo_albums{:id => "#{@provider.code}_albums"}
+  - @albums.each do |album|
+    = render :partial => "providers/#{@provider.code}/album", :object => album

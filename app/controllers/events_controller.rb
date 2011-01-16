@@ -2,18 +2,9 @@ class EventsController < ApplicationController
   respond_to :html, :json
   before_filter :authenticate_user!
 
-  def new
-    trip = Trip.find(params[:trip_id])
-    time = trip.events.last.try(:ended_at) || Time.now
-    @event = Event.new(:trip => trip, :started_at => time, :ended_at => time)
-  end
-
-  def edit
-    @event = Event.find(params[:id])
-  end
-
   def update
     @event = Event.find(params[:id])
+    authorize! :update, @event
     @event.attributes = params[:event]
     if @event.save
       if request.xhr?
@@ -35,6 +26,7 @@ class EventsController < ApplicationController
 
   def reorder
     @event = Event.find(params[:id])
+    authorize! :update, @event
     if @event.reorder(params[:previous_event_id], params[:next_event_id])
       if request.xhr?
         render :partial => 'events/event', :locals => {:event => @event}
@@ -46,12 +38,9 @@ class EventsController < ApplicationController
     end
   end
 
-  def index
-    @events = Event.all
-  end
-
   def create
     @event = Event.new(params[:event])
+    authorize! :create, @event
     if @event.save
       if request.xhr?
         render :partial => 'events/event', :locals => {:event => @event}
@@ -63,12 +52,9 @@ class EventsController < ApplicationController
     end
   end
 
-  def show
-    @event = Event.find(params[:id])
-  end
-
   def destroy
     @event = Event.find(params[:id])
+    authorize! :destroy, @event
     @trip = @event.trip
     if @event.destroy
       request.xhr? ? head(:ok) : redirect_to(@trip, :success => "Event deleted")

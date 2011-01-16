@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110104194912) do
+ActiveRecord::Schema.define(:version => 20110109173446) do
 
   create_table "authentications", :force => true do |t|
     t.integer  "user_id"
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(:version => 20110104194912) do
   add_index "histories", ["item", "table", "month", "year"], :name => "index_histories_on_item_and_table_and_month_and_year"
 
   create_table "items", :force => true do |t|
-    t.integer  "event_id",          :null => false
+    t.integer  "event_id",                         :null => false
     t.string   "type"
     t.string   "author"
     t.string   "title"
@@ -75,18 +75,18 @@ ActiveRecord::Schema.define(:version => 20110104194912) do
     t.decimal  "longitude"
     t.decimal  "latitude"
     t.string   "device"
-    t.string   "source"
     t.string   "source_id"
     t.string   "source_url"
     t.datetime "source_created_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "provider_id",       :default => 0, :null => false
   end
 
   add_index "items", ["created_at"], :name => "index_items_on_created_at"
   add_index "items", ["event_id"], :name => "index_items_on_event_id"
+  add_index "items", ["provider_id"], :name => "index_items_on_provider_id"
   add_index "items", ["rating"], :name => "index_items_on_rating"
-  add_index "items", ["source"], :name => "index_items_on_source"
   add_index "items", ["source_created_at"], :name => "index_items_on_source_created_at"
   add_index "items", ["source_id"], :name => "index_items_on_source_id"
   add_index "items", ["type"], :name => "index_items_on_type"
