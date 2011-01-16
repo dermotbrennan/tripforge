@@ -1,5 +1,0 @@
-%li.photo_album
-  .image= link_to image_tag(album.elements['media:group/media:thumbnail'].attribute('url').value), '#'+album.elements['gphoto:id'].text
-  %h2
-    = link_to truncate(album.elements['title'].text, :length => 15), '#'+album.elements['gphoto:id'].text
-    == (#{album.elements['gphoto:numphotos'].text})
