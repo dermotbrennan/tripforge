@@ -1,6 +1,5 @@
 class PicasaWebRemoteAlbum < RemoteAlbum
   def initialize(album_data)
-    Rails.logger.debug(album_data.elements['media:group'].inspect)
     @album_data = album_data
     @id = album_data.elements['gphoto:id'].text
 

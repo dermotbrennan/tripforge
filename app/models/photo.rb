@@ -4,6 +4,7 @@ class Photo < Item
   accepts_nested_attributes_for :photo_urls
 
   MAX_LARGE_PHOTO_WIDTH = 600
+  DEFAULT_THUMBNAIL_WIDTH = 75
 
   def image_url(width)
     self.source_url.gsub(/([^\/]+)$/, "s#{width}/\\1") if self.source_url.present?
@@ -18,7 +19,11 @@ class Photo < Item
   end
 
   def thumbnail_url
-    photo_urls.order('width asc').first.url if !photo_urls.empty?
+    if !photo_urls.empty?
+      photo_urls.order('width asc').first.url
+    elsif provider.code == 'picasa_web'
+      image_url(DEFAULT_THUMBNAIL_WIDTH)
+    end
   end
 
   class << self

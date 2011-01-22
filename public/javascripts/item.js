@@ -2,7 +2,7 @@ function Item(id) {
   this.id = id;
   this.fields = ['event_id', 'title', 'type', 'author', 'content', 'rating',
     'latitude', 'longitude', 'device', 'source_id', 'source_url',
-    'source_created_at', 'provider_id', 'album_id'
+    'source_created_at', 'provider_id', 'album_id', 'photo_urls'
   ];
 
   this.setAttributes = function(attributes) {
@@ -14,7 +14,16 @@ function Item(id) {
         if (item.data.length > 0) {
           item.data += '&';
         }
-        item.data += 'item['+field+']='+attributes[field];
+        if (field == 'photo_urls') {
+          $.each(attributes[field], function(j, photo_url) {
+            if (j > 0) item.data += '&';
+            item.data += 'item[photo_urls_attributes][][url]=' + photo_url['url'];
+            item.data += '&item[photo_urls_attributes][][width]=' + photo_url['width'];
+            item.data += '&item[photo_urls_attributes][][height]=' + photo_url['height'];
+          });
+        } else {
+          item.data += 'item['+field+']='+attributes[field];
+        }
       }
     });
   }

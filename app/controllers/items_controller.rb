@@ -3,15 +3,17 @@ class ItemsController < ApplicationController
   
   def create
     type = params[:item].delete(:type) if params[:item] && params[:item][:type]
-    @item = Item.new(params[:item])
-    @item.type = type
+    item_class =
+      begin type.constantize
+      rescue NameError
+        Item
+      end
+
+    @item = item_class.new(params[:item])
     authorize! :create, @item
     if @item.save
       if request.xhr?
-        if @item.type == 'Photo'
-          photo = Photo.find(@item.id)
-          render :partial => 'items/mini_item', :locals => {:mini_item => photo}
-        end
+        render :partial => 'items/mini_item', :locals => {:mini_item => @item}
       else
         redirect_to item_path(@item), :success => "Item created successfully"
       end

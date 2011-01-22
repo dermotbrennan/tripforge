@@ -28,7 +28,7 @@ function EventListItem(event_id) {
 jQuery.fn.event_list_itemify = function(trip_obj) {
   event = $(this);
   var trip = trip_obj;
-  
+
   function find_event(el) {
     return $($(el).parents('li.event')[0]);
   }
@@ -86,7 +86,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
     start: function(e, ui) {
       // modify map to make it take a new marker
       event_id = cleanEventId($(e.target).parent().parent().attr('id'));
-    }, 
+    },
     stop: function(e, ui) {
       //if (typeof(ui.map_drag_listener) != 'undefined')
       //  google.maps.event.removeListener(ui.map_drag_listener);
@@ -106,7 +106,15 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
       var source_created_at = ui.draggable.find('.source_created_at').text();
       var title = ui.draggable.find('.title').text();
       var event_id = cleanEventId(target_event.attr('id'));
-      //debug.log(album_id, event_id, source_id, provider_id );
+      var thumbnails = ui.draggable.find('.thumbnail');
+      var photo_urls = [];
+      thumbnails.each(function(i, thumb) {
+        thumb = $(thumb);
+        photo_urls.push({url: thumb.find('.thumb_url').text(),
+          width: thumb.find('.thumb_width').text(),
+          height: thumb.find('.thumb_height').text()
+        });
+      });
 
       item_el_id = 'item_'+source_id;
       item_in_event_el = target_event.find('#'+item_el_id);
@@ -114,18 +122,17 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
       // check if item_id already in the list of items
       if (item_in_event_el.length > 0) {
         // if it is then highlight item
-        item_in_event_el.highlight();
+        item_in_event_el.effect("highlight", {}, 1000);
       } else {
         // if it is not then add it to the end of the list
         items_list = target_event.find('.items ul');
         items_list.append("<li id='" + item_el_id + "' class='photo_item ajax_loading'></li>");
-        item_in_event_el = target_event.find('#'+item_el_id);
-        debug.log(item_in_event_el.length);
+        item_in_event_el = target_event.find('#'+item_el_id); // find the li that we just created
 
         // create a new item in the db
         item = new Item();
         item.setAttributes({event_id: event_id, type: 'Photo', title: title, provider_id: provider_id, source_id: source_id,
-          album_id: album_id, source_url: source_url, source_created_at: source_created_at});
+          album_id: album_id, source_url: source_url, source_created_at: source_created_at, photo_urls: photo_urls});
 
         item.save({success: function(objResponse) {
             item_in_event_el.replaceWith(objResponse);
@@ -137,7 +144,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
           }}
         );
       }
-      // TODO handle multiple drags
+      // TODO handle multiple drags*/
     }
   });
 

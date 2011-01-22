@@ -1,4 +1,4 @@
-- if (image_url = photo.image_url(50)).present?
+- if (image_url = photo.thumbnail_url).present?
   - large_image_url = photo.image_url(400)
   = link_to large_image_url do
     = image_tag image_url
