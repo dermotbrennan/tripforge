@@ -19,6 +19,7 @@ class ItemsController < ApplicationController
       end
     else
       if request.xhr?
+        Rails.logger.error @item.errors.inspect
         head :bad_request
       else
         render :action => :new
