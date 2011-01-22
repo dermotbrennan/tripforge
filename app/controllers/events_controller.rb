@@ -17,6 +17,7 @@ class EventsController < ApplicationController
       end
     else
       if request.xhr?
+        Rails.logger.error @event.errors.inspect
         render :text => "Uh oh! Saving failed! Please try again!", :status => :bad_request
       else
         render :action => :edit

@@ -20,3 +20,8 @@ truncate_table(Provider)
 ].each do |provider_data|
   Provider.create!(provider_data)
 end
+
+truncate_table(TransportMode)
+["Walking", "Driving", "Airplane"].each do |provider_data|
+  TransportMode.create!(name)
+end
