@@ -22,6 +22,6 @@ truncate_table(Provider)
 end
 
 truncate_table(TransportMode)
-["Walking", "Driving", "Airplane"].each do |provider_data|
-  TransportMode.create!(name)
+["Walking", "Driving", "Airplane"].each do |name|
+  TransportMode.create!(:name => name)
 end
