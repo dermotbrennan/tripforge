@@ -8,11 +8,13 @@
       = nl2br(@trip.description)
     - else
       No description.
-    %p#edit_trip_link== [#{link_to 'edit', edit_trip_path(@trip)}]
+    %p
+      %span#edit_trip_link== [#{link_to 'edit', edit_trip_path(@trip)}]
+      %span#delete_trip_link== [#{link_to 'delete', trip_path(@trip), :method => :delete, :confirm => "Are you sure you want to permanently delete this trip?"}]
 
   #trip_actions
     = link_to 'PLAY', {:action => 'play'}, :id => 'play_trip_button', :class => 'trip_button'
-    = link_to 'SHARE', {:action => 'share'}, :id => 'share_trip_button', :class => 'trip_button'
+    -#= link_to 'SHARE', '#', :id => 'share_trip_button', :class => 'trip_button'
 
 #tool_tabs
   %ul#tool_tabs_list 

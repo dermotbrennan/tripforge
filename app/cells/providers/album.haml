@@ -14,11 +14,12 @@
           .title= photo.title
           .source_url= photo.source_url
           .source_created_at= photo.source_created_at
-          - photo.thumbnails.each do |thumbnail|
-            .thumbnail
-              .thumb_url= thumbnail.url
-              .thumb_width= thumbnail.width.to_s
-              .thumb_height= thumbnail.height.to_s
+          - if photo.thumbnails.present?
+            - photo.thumbnails.each do |thumbnail|
+              .thumbnail
+                .thumb_url= thumbnail.url
+                .thumb_width= thumbnail.width.to_s
+                .thumb_height= thumbnail.height.to_s
 
         .image= image_tag photo.thumbnail_url, :alt => photo.title
         - if photo.title.present?

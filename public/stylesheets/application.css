@@ -282,6 +282,26 @@ form li.error p.inline-errors {
   float: right;
 }
 
+/* userbar */
+#user_bar {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  font-weight: bold;
+  font-size: 11px;
+  color: #000;
+}
+
+#user_bar a {
+  color: #000;
+  text-decoration: none;
+}
+
+#user_bar a:hover {
+  text-decoration: none;
+}
+
+
 /* navbar */
 #main-navbar {
   position: absolute;

@@ -16,6 +16,8 @@
       #header-wrapper
         #header
           = link_to 'TripForge', :root, :id => 'logo'
+          - if current_user
+            #user_bar== logged in as #{link_to current_user.email, trips_path}
           #main-navbar
             %ul
               - unless current_user

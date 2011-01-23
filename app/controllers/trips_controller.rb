@@ -48,4 +48,11 @@ class TripsController < ApplicationController
     @trip = Trip.find(params[:id])
     authorize! :show, @trip
   end
+
+  def destroy
+    @trip = Trip.find(params[:id])
+    authorize! :destroy, @trip
+    @trip.destroy
+    redirect_to :trips, :notice => "Trip '#{@trip.name}' deleted"
+  end
 end

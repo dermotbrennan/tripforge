@@ -126,6 +126,13 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
       } else {
         // if it is not then add it to the end of the list
         items_list = target_event.find('.items ul');
+        
+        // if the ul doesnt exist create it
+        if (items_list.length == 0) {
+          target_event.find('.items').append('<ul></ul>');
+          items_list = target_event.find('.items ul'); // find the ul that we just created
+        }
+
         items_list.append("<li id='" + item_el_id + "' class='photo_item ajax_loading'></li>");
         item_in_event_el = target_event.find('#'+item_el_id); // find the li that we just created
 
@@ -135,6 +142,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
           album_id: album_id, source_url: source_url, source_created_at: source_created_at, photo_urls: photo_urls});
 
         item.save({success: function(objResponse) {
+            debug.log(objResponse, item_in_event_el.length);
             item_in_event_el.replaceWith(objResponse);
           },
           error: function( objRequest ){
