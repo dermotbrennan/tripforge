@@ -38,9 +38,23 @@ $(document).ready(function() {
     new_event_wrapper_form.initForm();
   }
 
+  // make the tools tabs (photos, maps) follow you as you scroll the page
   $('#tool_tabs').scrollFollow( {
       speed: 800,
       offset: 60,
       container: 'main-content-inner'
     });
+
+  // use fancy box on any photos
+  $('a[rel=fancybox]').fancybox({
+    'hideOnContentClick': true,
+    'transitionIn'      : 'elastic',
+    'transitionOut'     : 'elastic',
+    'titlePosition'     : 'inside',
+    'changeSpeed'       : 75,
+    'changeFade'        : 0,
+    'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
+  	  return '<span id="fancybox-title-inside">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
+  	}
+  });
 });
