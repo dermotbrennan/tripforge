@@ -13,3 +13,7 @@ function EventInfoContainer(selector, trip) {
 EventInfoContainer.prototype.showEvent = function(event_id) {
   this.el.show().html($('#event-point-'+event_id+' .info').html());
 }
+
+EventInfoContainer.prototype.hide = function() {
+  this.el.hide();
+}

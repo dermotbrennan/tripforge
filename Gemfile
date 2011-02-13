@@ -32,6 +32,10 @@ group :production do
   gem 'pg'
 end
 
+group :rake do
+  gem 'rmagick', '>= 2.13.1', :require => 'RMagick'
+end
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

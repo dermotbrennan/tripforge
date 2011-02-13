@@ -13,6 +13,7 @@ function MapNavigation(selector, trip) {
     event_id = $(this).parents('.event_nav_button').find('.event_id').text();
     marker = trip.findMarkerByEventId(event_id);
     if (marker != null) {
+      trip.event_info_container.hide();
       trip.animateBetweenMarkers(trip.getCurrent(), marker);
       var intervalIdent = setInterval((function() {
         if (typeof(trip.travelMarker) != 'undefined' && !trip.travelMarker.is_moving) {

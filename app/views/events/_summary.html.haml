@@ -4,6 +4,6 @@
   .description= nl2br(event.description)
   %p
     == #{event.duration_description}
-  .items
-    - if !event.items.empty?
+  - if event.items.present?
+    .items
       %ul= render :partial => 'items/mini_item', :collection => event.items
