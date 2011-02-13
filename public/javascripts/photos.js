@@ -27,7 +27,6 @@ $(document).ready(function() {
               helper: 'clone',
               appendTo: '#main-content',
               start: function(e, ui) {
-                //debug.log(ui);
                 ui.helper.prevObject.css({visibility: 'hidden'});
               },
               stop: function(e, ui) {
