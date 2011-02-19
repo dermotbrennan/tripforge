@@ -26,14 +26,18 @@ class ProvidersController < ApplicationController
 
   def albums
     raise "no provider" unless @provider = Provider.find_by_code(params[:id])
-    @albums = RemoteAlbum.subclass_for(@provider, current_user).all
+    if current_user.has_credential_for?(@provider)
+      @albums = RemoteAlbum.subclass_for(@provider, current_user).all
+    end
     render :layout => false
   end
 
   def album
     raise "no provider" unless @provider = Provider.find_by_code(params[:id])
     raise "no album id" unless album_id = params[:album_id]
-    @album = RemoteAlbum.subclass_for(@provider, current_user).find(album_id)
+    if current_user.has_credential_for?(@provider)
+      @album = RemoteAlbum.subclass_for(@provider, current_user).find(album_id)
+    end
     render :layout => false
   end
 
