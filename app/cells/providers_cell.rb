@@ -14,18 +14,4 @@ class ProvidersCell < Cell::Rails
     @image_size = 64
     render
   end
-
-  def albums
-    raise "no provider" unless @provider = @opts[:provider]
-    @albums = RemoteAlbum.subclass_for(@provider, current_user).all
-    render
-  end
-
-  def album
-    raise "no provider" unless @provider = @opts[:provider]
-    raise "no album id" unless album_id = @opts[:album_id]
-    @album = RemoteAlbum.subclass_for(@provider, current_user).find(album_id)
-    render
-  end
-
 end

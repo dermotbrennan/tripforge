@@ -144,6 +144,7 @@ jQuery.fn.event_list_itemify = function(trip_obj) {
         item.save({success: function(objResponse) {
             debug.log(objResponse, item_in_event_el.length);
             item_in_event_el.replaceWith(objResponse);
+            applyFancyBox();
           },
           error: function( objRequest ){
             alert('error');

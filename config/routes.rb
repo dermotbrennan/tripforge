@@ -10,6 +10,7 @@ Tripmap::Application.routes.draw do
       get 'connect'
       get 'connect_callback'
       get 'album/:album_id', :action => 'album'
+      get 'albums'
     end
   end
 

@@ -1,0 +1,8 @@
+- if current_user.has_credential_for?(@provider)
+  %ul.photo_albums{:id => "#{@provider.code}_albums"}
+    - @albums.each do |album|
+      = render :partial => "providers/album", :object => album
+- else
+  -# show iframe that will connect to the service
+  %iframe{:src => connect_provider_path(@provider), :height => 440, :width => 440, :seamless => 'seamless'}
+  -# import_from_provider_story_scene_items_path(:story_id => @scene.story.id, :scene_id => @scene.id, :id => provider)

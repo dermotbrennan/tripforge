@@ -1,8 +1,36 @@
+function applyFancyBox() {
+  $('a[rel=fancybox]').fancybox({
+      'hideOnContentClick': true,
+      'transitionIn'      : 'elastic',
+      'transitionOut'     : 'elastic',
+      'titlePosition'     : 'inside',
+      'changeSpeed'       : 75,
+      'changeFade'        : 0,
+      'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
+        return '<span id="fancybox-title-inside">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
+      }
+    });
+}
+
 $(document).ready(function() {
   tool_tabs = $('#tool_tabs');
   if (tool_tabs.length > 0) {
     tool_tabs.tabs();
     $('#photos_tool').tabs();
+
+    // load up third-party photo providers
+    $('.photo_provider_area').each(function(i, area) {
+      area = $(this);
+      provider = area.attr('id').replace(/photo_provider_tab_/, '');
+      if (provider.length > 0) {
+        area.load('/providers/' + provider + '/albums', function() {
+          debug.log("Displaying album for "+provider);
+          activatePhotoAlbums();
+        });
+      } else {
+        debug.log('No provider code found');
+      }
+    })
   }
   
   map_el = $('#map');
@@ -46,15 +74,5 @@ $(document).ready(function() {
     });
 
   // use fancy box on any photos
-  $('a[rel=fancybox]').fancybox({
-    'hideOnContentClick': true,
-    'transitionIn'      : 'elastic',
-    'transitionOut'     : 'elastic',
-    'titlePosition'     : 'inside',
-    'changeSpeed'       : 75,
-    'changeFade'        : 0,
-    'titleFormat'       : function(title, currentArray, currentIndex, currentOpts) {
-  	  return '<span id="fancybox-title-inside">Image ' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; ' + title : '') + '</span>';
-  	}
-  });
+  applyFancyBox();
 });

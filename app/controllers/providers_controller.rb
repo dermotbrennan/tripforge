@@ -1,5 +1,5 @@
 class ProvidersController < ApplicationController
-  before_filter :find_provider, :only => [:connect, :connect_callback, :album]
+  before_filter :find_provider, :only => [:connect, :connect_callback, :album, :albums]
 
   def connect
     connect_action = :"connect_#{@provider_code}"
@@ -24,8 +24,16 @@ class ProvidersController < ApplicationController
     end
   end
 
+  def albums
+    raise "no provider" unless @provider = Provider.find_by_code(params[:id])
+    @albums = RemoteAlbum.subclass_for(@provider, current_user).all
+    render :layout => false
+  end
+
   def album
-    @album_id = params[:album_id]
+    raise "no provider" unless @provider = Provider.find_by_code(params[:id])
+    raise "no album id" unless album_id = params[:album_id]
+    @album = RemoteAlbum.subclass_for(@provider, current_user).find(album_id)
     render :layout => false
   end
 
