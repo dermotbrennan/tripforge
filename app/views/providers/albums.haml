@@ -6,6 +6,4 @@
   - else
     %p No albums
 - else
-  -# show iframe that will connect to the service
-  %iframe{:src => connect_provider_path(@provider), :height => 440, :width => 440, :seamless => 'seamless'}
-  -# import_from_provider_story_scene_items_path(:story_id => @scene.story.id, :scene_id => @scene.id, :id => provider)
+  %p= link_to_function "Allow access to #{@provider.name}", "window.open('#{connect_provider_path(@provider)}','Connect to #{@provider.name}', 'menubar=no,width=730,height=560,toolbar=no')"

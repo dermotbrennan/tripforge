@@ -12,6 +12,22 @@ function applyFancyBox() {
     });
 }
 
+function loadProviderArea(provider, context) {
+  if (!isDefined(context)) context = document;
+  area = $('#photo_provider_tab_'+provider, context);
+  area.html(''); // empty whatever is in it
+  area.addClass('ajax_loading');
+  if (provider.length > 0) {
+    area.load('/providers/' + provider + '/albums', function() {
+      $(this, context).removeClass('ajax_loading');
+      debug.log("Displaying album for "+provider);
+      activatePhotoAlbums(context);
+    });
+  } else {
+    debug.log('No provider code found');
+  }
+}
+
 $(document).ready(function() {
   tool_tabs = $('#tool_tabs');
   if (tool_tabs.length > 0) {
@@ -20,16 +36,8 @@ $(document).ready(function() {
 
     // load up third-party photo providers
     $('.photo_provider_area').each(function(i, area) {
-      area = $(this);
-      provider = area.attr('id').replace(/photo_provider_tab_/, '');
-      if (provider.length > 0) {
-        area.load('/providers/' + provider + '/albums', function() {
-          debug.log("Displaying album for "+provider);
-          activatePhotoAlbums();
-        });
-      } else {
-        debug.log('No provider code found');
-      }
+      provider = $(area).attr('id').replace(/photo_provider_tab_/, '');
+      loadProviderArea(provider);
     })
   }
   

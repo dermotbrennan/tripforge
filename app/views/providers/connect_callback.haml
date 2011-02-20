@@ -1,1 +1,8 @@
 %h1 Connection to #{@provider.name} made successfully!
+
+%p= link_to_function 'Close Window', "window.opener.loadProviderArea('#{@provider.code}', window.opener.document); window.close();" 
+:erb
+  <script type="text/javascript">
+    window.opener.loadProviderArea('<%= @provider.code %>', window.opener.document);
+    window.close();
+  </script>

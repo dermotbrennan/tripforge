@@ -12,6 +12,7 @@ class ProvidersController < ApplicationController
   end
 
   def connect_callback
+    #render :layout => false; return
     connect_callback_action = :"connect_callback_#{@provider_code}"
     if self.respond_to?(connect_callback_action, include_private=true)
       if self.send(connect_callback_action)

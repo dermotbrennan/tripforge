@@ -3,7 +3,7 @@ class Event < ActiveRecord::Base
   include ActionView::Helpers::DateHelper
   
   belongs_to :trip
-  has_many :items
+  has_many :items, :dependent => :destroy
 
   belongs_to :transport_mode
 

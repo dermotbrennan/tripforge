@@ -1,5 +1,5 @@
 class Photo < Item
-  has_many :photo_urls
+  has_many :photo_urls, :dependent => :destroy
 
   accepts_nested_attributes_for :photo_urls
 
